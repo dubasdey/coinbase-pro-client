@@ -16,10 +16,25 @@
  */
 package org.erc.coinbase.pro.model;
 
+import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class Account {
 
-	public Account() {
+	private String id;
 	
-	}
+	private BigDecimal balance;
+	
+	private BigDecimal holds;
+	
+	private BigDecimal available;
+	
+	private String currency;
 
+	private String profile_id;
 }

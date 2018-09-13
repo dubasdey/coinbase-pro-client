@@ -16,10 +16,13 @@
  */
 package org.erc.coinbase.pro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.erc.coinbase.pro.exceptions.CoinbaseException;
 import org.erc.coinbase.pro.model.Account;
+import org.erc.coinbase.pro.model.AccountFilter;
+import org.erc.coinbase.pro.model.AccountHistory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -49,9 +52,34 @@ public class Client {
 	 * @return the list
 	 * @throws CoinbaseException the coinbase exception
 	 */
-    public List<Account> accounts() throws CoinbaseException{
-    	return http.get("/accounts", new TypeReference<List<Account>>() {}, true);	
+    public List<Account> getAccounts(AccountFilter filter) throws CoinbaseException {
+    	List<Account> result = new ArrayList<>();
+    	if (filter == null) {
+    		result = http.get("/accounts", new TypeReference<List<Account>>() {}, true);
+    	} else if (filter.getId() !=null ) {
+    		Account acc = http.get(String.format("/account/%s",filter.getId()), new TypeReference<Account>() {}, true);
+    		result.add(acc);
+    	} else {
+    		//TODO Pagination
+    		result = http.get("/accounts", new TypeReference<List<Account>>() {}, true);
+    	}
+    	return result;
     }
     
- 
+    /**
+	 * Accounts.
+	 *
+	 * @return account
+	 * @throws CoinbaseException the coinbase exception
+	 */
+    public Account getAccount(String id) throws CoinbaseException {
+    	return http.get(String.format("/account/%s",id), new TypeReference<Account>() {}, true);	
+    }
+    
+    
+    public List<AccountHistory> getAccountHistory(String id) throws CoinbaseException {
+    	//TODO 
+    	return null;
+    }
+    
 }
