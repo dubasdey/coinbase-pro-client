@@ -34,8 +34,19 @@ import org.erc.coinbase.pro.exceptions.SignatureException;
  */
 final class Signature {
 
+	/** The signature. */
 	private String signature;
 	
+	/**
+	 * Instantiates a new signature.
+	 *
+	 * @param secretKey   the secret key
+	 * @param requestPath the request path
+	 * @param method      the method
+	 * @param body        the body
+	 * @param timestamp   the timestamp
+	 * @throws SignatureException the signature exception
+	 */
 	public Signature(String secretKey,String requestPath, String method, String body, String timestamp) throws SignatureException {
         try {
             String prehash = timestamp + method.toUpperCase() + requestPath + body;
@@ -49,6 +60,9 @@ final class Signature {
         }
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return signature;

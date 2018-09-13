@@ -17,56 +17,56 @@
 package org.erc.coinbase.pro.exceptions;
 
 /**
- * The Class SignatureException.
+ * The Class InvalidRequestException.
  */
-public class SignatureException extends CoinbaseException {
+public class InvalidRequestException extends CoinbaseException {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 6356532144171918886L;
+	private static final long serialVersionUID = -7901822465623812029L;
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid request exception.
 	 */
-	public SignatureException() {
+	public InvalidRequestException() {
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid request exception.
 	 *
 	 * @param message the message
 	 */
-	public SignatureException(String message) {
+	public InvalidRequestException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid request exception.
 	 *
 	 * @param cause the cause
 	 */
-	public SignatureException(Throwable cause) {
+	public InvalidRequestException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid request exception.
 	 *
 	 * @param message the message
 	 * @param cause   the cause
 	 */
-	public SignatureException(String message, Throwable cause) {
+	public InvalidRequestException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid request exception.
 	 *
 	 * @param message            the message
 	 * @param cause              the cause
 	 * @param enableSuppression  the enable suppression
 	 * @param writableStackTrace the writable stack trace
 	 */
-	public SignatureException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public InvalidRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

@@ -17,56 +17,56 @@
 package org.erc.coinbase.pro.exceptions;
 
 /**
- * The Class SignatureException.
+ * The Class ServerException.
  */
-public class SignatureException extends CoinbaseException {
+public class ServerException extends CoinbaseException {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 6356532144171918886L;
+	private static final long serialVersionUID = 128727907024751464L;
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new server exception.
 	 */
-	public SignatureException() {
+	public ServerException() {
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new server exception.
 	 *
 	 * @param message the message
 	 */
-	public SignatureException(String message) {
+	public ServerException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new server exception.
 	 *
 	 * @param cause the cause
 	 */
-	public SignatureException(Throwable cause) {
+	public ServerException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new server exception.
 	 *
 	 * @param message the message
 	 * @param cause   the cause
 	 */
-	public SignatureException(String message, Throwable cause) {
+	public ServerException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new server exception.
 	 *
 	 * @param message            the message
 	 * @param cause              the cause
 	 * @param enableSuppression  the enable suppression
 	 * @param writableStackTrace the writable stack trace
 	 */
-	public SignatureException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public ServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

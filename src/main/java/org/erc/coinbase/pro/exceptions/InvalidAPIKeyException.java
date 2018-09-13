@@ -17,56 +17,57 @@
 package org.erc.coinbase.pro.exceptions;
 
 /**
- * The Class SignatureException.
+ * The Class InvalidAPIKeyException.
  */
-public class SignatureException extends CoinbaseException {
+public class InvalidAPIKeyException extends CoinbaseException {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 6356532144171918886L;
+	private static final long serialVersionUID = -1253421232956001516L;
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid API key exception.
 	 */
-	public SignatureException() {
+	public InvalidAPIKeyException() {
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid API key exception.
 	 *
 	 * @param message the message
 	 */
-	public SignatureException(String message) {
+	public InvalidAPIKeyException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid API key exception.
 	 *
 	 * @param cause the cause
 	 */
-	public SignatureException(Throwable cause) {
+	public InvalidAPIKeyException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid API key exception.
 	 *
 	 * @param message the message
 	 * @param cause   the cause
 	 */
-	public SignatureException(String message, Throwable cause) {
+	public InvalidAPIKeyException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * Instantiates a new signature exception.
+	 * Instantiates a new invalid API key exception.
 	 *
 	 * @param message            the message
 	 * @param cause              the cause
 	 * @param enableSuppression  the enable suppression
 	 * @param writableStackTrace the writable stack trace
 	 */
-	public SignatureException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public InvalidAPIKeyException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

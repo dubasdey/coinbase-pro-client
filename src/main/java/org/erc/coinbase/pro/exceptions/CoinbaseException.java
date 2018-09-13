@@ -16,26 +16,57 @@
  */
 package org.erc.coinbase.pro.exceptions;
 
+/**
+ * The Class CoinbaseException.
+ */
 public class CoinbaseException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5373405445972195961L;
 
+	/**
+	 * Instantiates a new coinbase exception.
+	 */
 	public CoinbaseException() {
 
 	}
 
+	/**
+	 * Instantiates a new coinbase exception.
+	 *
+	 * @param message the message
+	 */
 	public CoinbaseException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new coinbase exception.
+	 *
+	 * @param cause the cause
+	 */
 	public CoinbaseException(Throwable cause) {
 		super(cause);
 	}
 
+	/**
+	 * Instantiates a new coinbase exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public CoinbaseException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new coinbase exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 * @param enableSuppression the enable suppression
+	 * @param writableStackTrace the writable stack trace
+	 */
 	public CoinbaseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}

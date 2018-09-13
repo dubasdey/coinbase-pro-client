@@ -16,16 +16,42 @@
  */
 package org.erc.coinbase.pro;
 
-import org.erc.coinbase.pro.exceptions.SignatureException;
+import java.util.List;
 
+import org.erc.coinbase.pro.exceptions.CoinbaseException;
+import org.erc.coinbase.pro.model.Account;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
+/**
+ * The Class Client.
+ */
 public class Client {
 
+	/** The http. */
 	private HTTPRest http;
 	
+    /**
+	 * Instantiates a new client.
+	 *
+	 * @param publicKey  the public key
+	 * @param secretKey  the secret key
+	 * @param passphrase the passphrase
+	 * @param baseUrl    the base url
+	 */
     public Client(String publicKey,String secretKey, String passphrase, String baseUrl) {
 		http = new HTTPRest(baseUrl,publicKey,secretKey,passphrase);
     }
 	
+    /**
+	 * Accounts.
+	 *
+	 * @return the list
+	 * @throws CoinbaseException the coinbase exception
+	 */
+    public List<Account> accounts() throws CoinbaseException{
+    	return http.get("/accounts", new TypeReference<List<Account>>() {}, true);	
+    }
     
  
 }
