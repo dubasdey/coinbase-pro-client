@@ -23,6 +23,12 @@ import org.erc.coinbase.pro.exceptions.CoinbaseException;
 import org.erc.coinbase.pro.model.Account;
 import org.erc.coinbase.pro.model.AccountFilter;
 import org.erc.coinbase.pro.model.AccountHistory;
+import org.erc.coinbase.pro.model.Fill;
+import org.erc.coinbase.pro.model.FillFilter;
+import org.erc.coinbase.pro.model.Hold;
+import org.erc.coinbase.pro.model.Order;
+import org.erc.coinbase.pro.model.OrderFilter;
+import org.erc.coinbase.pro.model.OrderRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -80,6 +86,34 @@ public class Client {
     public List<AccountHistory> getAccountHistory(String id) throws CoinbaseException {
     	//TODO 
     	return null;
+    }
+    
+    public List<Hold> getAccountHolds(String id) throws CoinbaseException {
+    	//TODO 
+    	return null;
+    }
+ 
+    public Order placeOrder(OrderRequest request) throws CoinbaseException {
+    	//TODO 
+    	return null;
+    }
+    
+    public void cancelOrder(String id) throws CoinbaseException {
+    	//TODO 
+    } 
+    
+    public void cancelAllOrder() throws CoinbaseException {
+    	//TODO 
+    } 
+    
+    public List<Order> getOrders(OrderFilter filter) throws CoinbaseException {
+    	//TODO 
+    	return null;    
+    }
+    
+    public List<Fill> getFills(FillFilter filter ) throws CoinbaseException {
+    	//TODO 
+    	return null; 
     }
     
 }
