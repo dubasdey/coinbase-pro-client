@@ -23,12 +23,21 @@ import org.erc.coinbase.pro.exceptions.CoinbaseException;
 import org.erc.coinbase.pro.model.Account;
 import org.erc.coinbase.pro.model.AccountFilter;
 import org.erc.coinbase.pro.model.AccountHistory;
+import org.erc.coinbase.pro.model.CoinbaseAccount;
+import org.erc.coinbase.pro.model.Deposit;
+import org.erc.coinbase.pro.model.DepositRequest;
 import org.erc.coinbase.pro.model.Fill;
 import org.erc.coinbase.pro.model.FillFilter;
 import org.erc.coinbase.pro.model.Hold;
 import org.erc.coinbase.pro.model.Order;
 import org.erc.coinbase.pro.model.OrderFilter;
 import org.erc.coinbase.pro.model.OrderRequest;
+import org.erc.coinbase.pro.model.Payment;
+import org.erc.coinbase.pro.model.Report;
+import org.erc.coinbase.pro.model.ReportRequest;
+import org.erc.coinbase.pro.model.TrailingVolume;
+import org.erc.coinbase.pro.model.Withdrawal;
+import org.erc.coinbase.pro.model.WithdrawalRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -112,6 +121,41 @@ public class Client {
     }
     
     public List<Fill> getFills(FillFilter filter ) throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public Deposit deposit(DepositRequest deposit) throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public Withdrawal withdrawal(WithdrawalRequest deposit) throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public List<Payment> getPaymentMethods() throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public List<CoinbaseAccount> getCoinbaseAccounts() throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public Report createReport(ReportRequest request) throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public Report getReportStatus(String id) throws CoinbaseException {
+    	//TODO 
+    	return null; 
+    }
+    
+    public List<TrailingVolume> getTrailingVolume() throws CoinbaseException {
     	//TODO 
     	return null; 
     }
