@@ -71,6 +71,12 @@ final class HTTPRest {
 	/** The passphrase. */
 	private String passphrase;
 	
+	/** The httpclient. */
+	private  CloseableHttpClient httpclient;
+	
+	/**
+	 * Sets the proxy config.
+	 */
 	@Getter
 	@Setter
 	private ProxyConfig proxyConfig;
@@ -85,11 +91,32 @@ final class HTTPRest {
 	 */
 	public HTTPRest(String baseUrl,String secretKey,String publicKey,String passphrase) {
 		mapper = new ObjectMapper();
+		
 		this.baseUrl = baseUrl;
 		this.secretKey = secretKey;
 		this.publicKey = publicKey;
 		this.passphrase = passphrase;
 	}
+	
+	/**
+	 * Inits the.
+	 */
+	private void init() {
+		if(httpclient == null) {
+		    HttpClientBuilder builder = HttpClients.custom();
+		    if(proxyConfig !=null) {
+				CredentialsProvider credsProvider = new BasicCredentialsProvider();
+				if(proxyConfig.getUser() !=null) {
+					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), 8888),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));
+				}
+		    	HttpHost proxy = new HttpHost(proxyConfig.getHost(), proxyConfig.getPort(), "http");
+		    	
+		    	builder.setDefaultCredentialsProvider(credsProvider).setProxy(proxy);
+		    }
+		    httpclient = builder.build();
+		}
+	}
+	
 	
 	/**
 	 * Gets the.
@@ -107,26 +134,14 @@ final class HTTPRest {
 		try {
 			log.debug(String.format("> Request %s",resourcePath));
 		    
-		    HttpClientBuilder builder = HttpClients.custom();
-		    if(proxyConfig !=null) {
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-				if(proxyConfig.getUser() !=null) {
-					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), 8888),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));
-				}
-		    	HttpHost proxy = new HttpHost(proxyConfig.getHost(), proxyConfig.getPort(), "http");
-		    	
-		    	builder.setDefaultCredentialsProvider(credsProvider).setProxy(proxy);
-		    }
-		    CloseableHttpClient httpclient = builder.build();
-		        
-
+			init();
+			
 	        HttpGet request = new HttpGet(baseUrl + resourcePath);
 	       
 	        request.addHeader("accept","application/json");
 	        request.addHeader("content-type", "application/json");
 	        request.addHeader("Accept-Language", "en");
 	        
-
 			if(secured) {
 				String timestamp = Instant.now().getEpochSecond() + "";
 				Signature signature = new Signature(secretKey,resourcePath,"GET","",timestamp);
