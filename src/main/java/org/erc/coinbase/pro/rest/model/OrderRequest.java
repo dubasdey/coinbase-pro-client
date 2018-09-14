@@ -16,6 +16,25 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
+import lombok.Data;
+
+/**
+ * Instantiates a new order request.
+ */
+@Data
 public class OrderRequest {
 
+	/** The size. */
+	private BigDecimal size;
+	
+	/** The price. */
+	private BigDecimal price;
+	
+	/** The side. */
+	private String side;
+	
+	/** The product id. */
+	private String product_id;
 }

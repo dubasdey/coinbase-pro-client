@@ -16,33 +16,20 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import lombok.Data;
 
 /**
- * Instantiates a new account history.
+ * Instantiates a new account history details.
  */
 @Data
-public class AccountHistory {
+public class AccountHistoryDetails {
 
-	/** The id. */
-	private String id;
+	/** The order id. */
+	private String order_id;
 	
-	/** The created at. */
-	private Date created_at;
+	/** The trade id. */
+	private int trade_id;
 	
-	/** The amount. */
-	private BigDecimal amount;
-	
-	/** The balance. */
-	private BigDecimal balance;
-	
-	/** The type. */
-	private String type;
-	
-	/** The details. */
-	private AccountHistoryDetails details;
-
+	/** The product id. */
+	private String product_id;
 }

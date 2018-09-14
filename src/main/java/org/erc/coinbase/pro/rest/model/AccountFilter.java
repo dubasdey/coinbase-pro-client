@@ -16,13 +16,38 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Instantiates a new account filter.
+ */
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class AccountFilter extends PaginationFilter{
 
+	/** The id. */
 	private String id;
+	
+	/** The currency. */
+	private String currency;
+	
+	/** The balance. */
+	private BigDecimal balance;
+	
+	/** The holds. */
+	private BigDecimal holds;
+	
+	/** The available. */
+	private BigDecimal available;
+		
+	/**
+	 * Checks for only id.
+	 */
+	public boolean hasOnlyId() {
+		return id!=null && currency == null && balance == null && holds == null && available == null;
+	}
 
 }

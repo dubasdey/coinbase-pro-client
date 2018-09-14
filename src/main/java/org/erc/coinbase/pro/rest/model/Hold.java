@@ -16,10 +16,36 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import lombok.Data;
+
+/**
+ * Instantiates a new hold.
+ */
+@Data
 public class Hold {
 
-	public Hold() {
-		// TODO Auto-generated constructor stub
-	}
+	/** The id. */
+	private String id;
+	
+	/** The account id. */
+	private String account_id;
+	
+	/** The created at. */
+	private Date created_at;
+	
+	/** The updated at. */
+	private Date updated_at;
+	
+	/** The amount. */
+	private BigDecimal amount;
+	
+	/** The type. */
+	private String type;
+	
+	/** The ref. */
+	private String ref;
 
 }

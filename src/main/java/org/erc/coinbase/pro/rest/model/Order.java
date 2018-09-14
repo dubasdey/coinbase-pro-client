@@ -16,6 +16,59 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import lombok.Data;
+
+/**
+ * Instantiates a new order.
+ */
+@Data
 public class Order {
 
+	/** The id. */
+	private String id;
+	
+	/** The price. */
+	private BigDecimal price;
+	
+	/** The size. */
+	private BigDecimal size;
+	
+	/** The product id. */
+	private String product_id;
+	
+	/** The side. */
+	private String side;
+	
+	/** The stp. */
+	private String stp;
+	
+	/** The type. */
+	private String type;
+	
+	/** The time in force. */
+	private String time_in_force;
+	
+	/** The post only. */
+	private Boolean post_only;
+	
+	/** The created at. */
+	private Date created_at;
+	
+	/** The fill fees. */
+	private BigDecimal fill_fees;
+	
+	/** The filled size. */
+	private BigDecimal filled_size;
+	
+	/** The executed value. */
+	private BigDecimal executed_value;
+	
+	/** The status. */
+	private String status;
+	
+	/** The settled. */
+	private Boolean settled;
 }

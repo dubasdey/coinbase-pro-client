@@ -98,9 +98,9 @@ public class Client {
     public List<Account> getAccounts(AccountFilter filter) throws CoinbaseException {
     	List<Account> result = new ArrayList<>();
     	if (filter == null) {
-    		result = http.get("/accounts", new TypeReference<List<Account>>() {}, true);
+    		result = http.get("/accounts", new TypeReference<List<Account>>() {},null, true);
     	} else if (filter.getId() !=null ) {
-    		Account acc = http.get(String.format("/account/%s",filter.getId()), new TypeReference<Account>() {}, true);
+    		Account acc = http.get(String.format("/account/%s",filter.getId()), new TypeReference<Account>() {},null, true);
     		result.add(acc);
     	} else {
     		//TODO Pagination
@@ -117,7 +117,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Account getAccount(String id) throws CoinbaseException {
-    	return http.get(String.format("/account/%s",id), new TypeReference<Account>() {}, true);	
+    	return http.get(String.format("/account/%s",id), new TypeReference<Account>() {},null, true);	
     }
     
     
@@ -129,7 +129,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<AccountHistory> getAccountHistory(String id) throws CoinbaseException {
-    	return http.get(String.format("/account/%s/ledger",id), new TypeReference<List<AccountHistory>>() {}, true);
+    	return http.get(String.format("/account/%s/ledger",id), new TypeReference<List<AccountHistory>>() {},null, true);
     }
     
     /**
@@ -140,7 +140,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<Hold> getAccountHolds(String id) throws CoinbaseException {
-    	return http.get(String.format("/account/%s/holds",id), new TypeReference<List<Hold>>() {}, true);
+    	return http.get(String.format("/account/%s/holds",id), new TypeReference<List<Hold>>() {},null, true);
     }
  
     /**
@@ -358,7 +358,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<Currency> getCurrencies() throws CoinbaseException{
-    	return http.get("/currencies", new TypeReference<List<Currency>>() {}, false);
+    	return http.get("/currencies", new TypeReference<List<Currency>>() {},null, false);
     } 
     
     /**

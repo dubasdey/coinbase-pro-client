@@ -21,6 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +33,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -77,7 +81,19 @@ final class HTTPRest {
 	/**
 	 * Sets the proxy config.
 	 */
+	
+	/**
+	 * Gets the sets the proxy config.
+	 *
+	 * @return the sets the proxy config
+	 */
 	@Getter
+	
+	/**
+	 * Sets the sets the proxy config.
+	 *
+	 * @param proxyConfig the new sets the proxy config
+	 */
 	@Setter
 	private ProxyConfig proxyConfig;
 	
@@ -104,17 +120,31 @@ final class HTTPRest {
 	private void init() {
 		if(httpclient == null) {
 		    HttpClientBuilder builder = HttpClients.custom();
+		    // Proxy
 		    if(proxyConfig !=null) {
 				CredentialsProvider credsProvider = new BasicCredentialsProvider();
 				if(proxyConfig.getUser() !=null) {
 					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), 8888),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));
 				}
 		    	HttpHost proxy = new HttpHost(proxyConfig.getHost(), proxyConfig.getPort(), "http");
-		    	
 		    	builder.setDefaultCredentialsProvider(credsProvider).setProxy(proxy);
 		    }
 		    httpclient = builder.build();
 		}
+	}
+	
+	
+	/**
+	 * Parameter format.
+	 *
+	 * @param param the param
+	 * @return the string
+	 */
+	private String parameterFormat(Object param) {
+		if(param instanceof Date) {
+			//TODO ISO DATE
+		}
+		return param.toString();
 	}
 	
 	
@@ -124,20 +154,29 @@ final class HTTPRest {
 	 * @param              <T> the generic type
 	 * @param resourcePath the resource path
 	 * @param type         the type
+	 * @param params       the params
 	 * @param secured      the secured
 	 * @return the t
 	 * @throws CoinbaseException the coinbase exception
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(String resourcePath, TypeReference<T> type,boolean secured) throws CoinbaseException {
+	public <T> T get(String resourcePath, TypeReference<T> type,Map<String,Object> params,boolean secured) throws CoinbaseException {
 		T resultObject = null;
 		try {
 			log.debug(String.format("> Request %s",resourcePath));
 		    
 			init();
-			
-	        HttpGet request = new HttpGet(baseUrl + resourcePath);
-	       
+			HttpGet request;
+			if(params!=null && !params.isEmpty()) {
+				URIBuilder builder = new URIBuilder(baseUrl + resourcePath);
+				for(Entry<String,Object> param: params.entrySet()) {
+					builder.setParameter(param.getKey(), parameterFormat(param.getValue()));
+				}
+				request = new HttpGet(builder.build());
+			}else {
+				request = new HttpGet(baseUrl + resourcePath);
+			}
+
 	        request.addHeader("accept","application/json");
 	        request.addHeader("content-type", "application/json");
 	        request.addHeader("Accept-Language", "en");
@@ -150,7 +189,7 @@ final class HTTPRest {
 				request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
 				request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);
 			}
-			
+		
 			CloseableHttpResponse response = httpclient.execute(request);
 			
 			int responseCode = response.getStatusLine().getStatusCode();
