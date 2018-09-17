@@ -3,6 +3,7 @@ package org.erc.coinbase.pro.rest;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -20,17 +21,26 @@ public class ClientTest {
 	public void init() throws IOException {
 		
 		Properties properties = new Properties();
-		properties.load(Client.class.getResourceAsStream("/test.properties"));
+		InputStream stream = Client.class.getResourceAsStream("/test.properties");
 		
-		String publickey = properties.getProperty("publickey");
-		String secret = properties.getProperty("secret");
-		String pass = properties.getProperty("pass");
-		String url = properties.getProperty("url");
-		
-		ProxyConfig config = new ProxyConfig("172.31.219.30", 8080,"SCISB\\\\xIS15817","Password15");
-		client = new Client(publickey,secret,pass,url);
-		client.setProxy(config);
-
+		if(stream!=null) {
+			properties.load(stream);
+			
+			String publickey = properties.getProperty("publickey");
+			String secret = properties.getProperty("secret");
+			String pass = properties.getProperty("pass");
+			String url = properties.getProperty("url");
+			client = new Client(publickey,secret,pass,url);
+			
+			String host = properties.getProperty("proxy.host");
+			if(host!=null) {
+				int port = Integer.parseInt(properties.getProperty("proxy.port","8080"));
+				String user = properties.getProperty("proxy.user");
+				String ppass = properties.getProperty("proxy.pass");
+				ProxyConfig config = new ProxyConfig(host, port,user,ppass);
+				client.setProxy(config);
+			}
+		}
 	}
 
 	@Test
