@@ -119,9 +119,11 @@ final class HTTPRest {
 	 */
 	private void init() {
 		if(httpclient == null) {
+			log.debug("Init HTTP Rest client");
 		    HttpClientBuilder builder = HttpClients.custom();
 		    // Proxy
 		    if(proxyConfig !=null) {
+		    	log.debug("Using proxy");
 				CredentialsProvider credsProvider = new BasicCredentialsProvider();
 				if(proxyConfig.getUser() !=null) {
 					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), 8888),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));

@@ -43,6 +43,7 @@ import org.erc.coinbase.pro.rest.model.Report;
 import org.erc.coinbase.pro.rest.model.ReportRequest;
 import org.erc.coinbase.pro.rest.model.Stats;
 import org.erc.coinbase.pro.rest.model.Ticker;
+import org.erc.coinbase.pro.rest.model.Time;
 import org.erc.coinbase.pro.rest.model.Trade;
 import org.erc.coinbase.pro.rest.model.TrailingVolume;
 import org.erc.coinbase.pro.rest.model.Withdrawal;
@@ -368,7 +369,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Date getTime() throws CoinbaseException{
-    	//TODO 
-    	return null; 
+    	Time time = http.get("/time", new TypeReference<Time>() {},null, false);
+    	return time!=null?time.getIso():null; 
     } 
 }
