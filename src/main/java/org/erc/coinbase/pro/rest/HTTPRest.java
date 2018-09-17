@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,7 +34,9 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -81,12 +84,6 @@ final class HTTPRest {
 	/**
 	 * Sets the proxy config.
 	 */
-	
-	/**
-	 * Gets the sets the proxy config.
-	 *
-	 * @return the sets the proxy config
-	 */
 	@Getter
 	
 	/**
@@ -107,7 +104,6 @@ final class HTTPRest {
 	 */
 	public HTTPRest(String baseUrl,String secretKey,String publicKey,String passphrase) {
 		mapper = new ObjectMapper();
-		
 		this.baseUrl = baseUrl;
 		this.secretKey = secretKey;
 		this.publicKey = publicKey;
@@ -135,7 +131,6 @@ final class HTTPRest {
 		}
 	}
 	
-	
 	/**
 	 * Parameter format.
 	 *
@@ -144,11 +139,64 @@ final class HTTPRest {
 	 */
 	private String parameterFormat(Object param) {
 		if(param instanceof Date) {
-			//TODO ISO DATE
+			 DateTimeFormatter printer = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.S");
+			 return printer.toFormat().format(param);
 		}
 		return param.toString();
 	}
 	
+	/**
+	 * Post.
+	 *
+	 * @param               <T> the generic type
+	 * @param               <R> the generic type
+	 * @param resourcePath  the resource path
+	 * @param type          the type
+	 * @param requestObject the request object
+	 * @return the t
+	 * @throws CoinbaseException the coinbase exception
+	 */
+	@SuppressWarnings("unchecked")
+	public <T,R> T post(String resourcePath,TypeReference<T> type,R requestObject) throws CoinbaseException {
+		T resultObject = null;
+		try {
+			log.debug(String.format("> Request %s",resourcePath));
+			init();
+			HttpPost request = new HttpPost(baseUrl + resourcePath);
+			request.addHeader("accept","application/json");
+		    request.addHeader("content-type", "application/json");
+		    request.addHeader("Accept-Language", "en");
+		        
+		    // Securing
+			String timestamp = Instant.now().getEpochSecond() + "";
+			Signature signature = new Signature(secretKey,resourcePath,"GET","",timestamp);
+			request.addHeader("CB-ACCESS-KEY", publicKey);
+			request.addHeader("CB-ACCESS-SIGN", signature.toString());
+			request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
+			request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);
+		        
+			String requestJson = mapper.writeValueAsString(requestObject);
+			log.debug(String.format("> Request %s JSON: %s",resourcePath,requestJson));
+			StringEntity entity = new StringEntity(requestJson);
+			request.setEntity(entity);
+			CloseableHttpResponse response = httpclient.execute(request);
+			
+			int responseCode = response.getStatusLine().getStatusCode();
+			String jsonResponse = readStream(response.getEntity().getContent(),"UTF-8" );
+			response.close();
+			log.debug(String.format("< Response %s:%s",responseCode,jsonResponse));
+			if (responseCode < 300) { 
+				resultObject = (T) mapper.readValue(jsonResponse,type);
+			}else {
+				raiseResponseException(responseCode,jsonResponse);
+			}
+			
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw new ServerException(e.getMessage(),e);
+		}
+		return resultObject;
+	}
 	
 	/**
 	 * Gets the.

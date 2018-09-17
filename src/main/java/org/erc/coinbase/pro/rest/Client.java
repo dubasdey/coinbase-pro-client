@@ -24,35 +24,7 @@ import java.util.Map;
 
 import org.erc.coinbase.pro.rest.exceptions.CoinbaseException;
 import org.erc.coinbase.pro.rest.exceptions.RequiredParameterException;
-import org.erc.coinbase.pro.rest.model.Account;
-import org.erc.coinbase.pro.rest.model.AccountFilter;
-import org.erc.coinbase.pro.rest.model.AccountHistory;
-import org.erc.coinbase.pro.rest.model.Book;
-import org.erc.coinbase.pro.rest.model.Candle;
-import org.erc.coinbase.pro.rest.model.ProductCandleFilter;
-import org.erc.coinbase.pro.rest.model.CoinbaseAccount;
-import org.erc.coinbase.pro.rest.model.Currency;
-import org.erc.coinbase.pro.rest.model.Deposit;
-import org.erc.coinbase.pro.rest.model.DepositRequest;
-import org.erc.coinbase.pro.rest.model.Fill;
-import org.erc.coinbase.pro.rest.model.FillFilter;
-import org.erc.coinbase.pro.rest.model.Hold;
-import org.erc.coinbase.pro.rest.model.Order;
-import org.erc.coinbase.pro.rest.model.OrderFilter;
-import org.erc.coinbase.pro.rest.model.OrderRequest;
-import org.erc.coinbase.pro.rest.model.Payment;
-import org.erc.coinbase.pro.rest.model.Product;
-import org.erc.coinbase.pro.rest.model.ProductTradesFilter;
-import org.erc.coinbase.pro.rest.model.ProductsFilter;
-import org.erc.coinbase.pro.rest.model.Report;
-import org.erc.coinbase.pro.rest.model.ReportRequest;
-import org.erc.coinbase.pro.rest.model.Stats;
-import org.erc.coinbase.pro.rest.model.Ticker;
-import org.erc.coinbase.pro.rest.model.Time;
-import org.erc.coinbase.pro.rest.model.Trade;
-import org.erc.coinbase.pro.rest.model.TrailingVolume;
-import org.erc.coinbase.pro.rest.model.Withdrawal;
-import org.erc.coinbase.pro.rest.model.WithdrawalRequest;
+import org.erc.coinbase.pro.rest.model.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -507,7 +479,7 @@ public class Client {
 	 * @return the product candles
 	 * @throws CoinbaseException the coinbase exception
 	 */
-    public List<Candle> getProductHistoricRate(ProductCandleFilter request) throws CoinbaseException{
+    public List<String[]> getProductHistoricRate(ProductCandleFilter request) throws CoinbaseException{
     	if(request == null || request.getProductId() == null || request.getProductId().isEmpty()) {
     		throw new RequiredParameterException("productId");
     	} 
@@ -518,7 +490,7 @@ public class Client {
 		if(request.getGranularity()!=null) {
 			putIfAbsent(filter, "granularity", request.getGranularity().getSeconds());
 		}
-    	return http.get(String.format("/products/%s/trades",request.getProductId()), new TypeReference<List<Candle>>() {},filter, false);
+    	return http.get(String.format("/products/%s/trades",request.getProductId()), new TypeReference<List<String[]>>() {},filter, false);
     }    
     
     /**
