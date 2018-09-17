@@ -14,5 +14,5 @@
 
 * Before submitting, please read the Contributing guide to know more about coding conventions and benchmarks.
 
-Thanks! :heart: :heart: :heart:
+Thanks!
 
