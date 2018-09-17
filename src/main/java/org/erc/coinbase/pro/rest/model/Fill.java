@@ -16,6 +16,44 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import lombok.Data;
+
+/**
+ * The Class Fill.
+ */
+@Data
 public class Fill {
 
+	/** The trade id. */
+	private String trade_id;
+	
+	/** The product id. */
+	private String product_id;
+	
+	/** The price. */
+	private BigDecimal price;
+	
+	/** The size. */
+	private BigDecimal size;
+	
+	/** The order id. */
+	private String order_id;
+	
+	/** The created at. */
+	private Date created_at;
+	
+	/** The liquidity. */
+	private String liquidity;
+	
+	/** The fee. */
+	private BigDecimal fee;
+	
+	/** The settled. */
+	private boolean settled;
+	
+	/** The side. */
+	private String side;
 }

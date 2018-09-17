@@ -16,6 +16,19 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-public class FillFilter {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+/**
+ * The Class FillFilter.
+ */
+@Data
+@EqualsAndHashCode(callSuper=true)
+public class FillFilter extends PaginationFilter {
+
+	/** The order id. */
+	private String orderId;
+	
+	/** The product id. */
+	private String productId;
 }

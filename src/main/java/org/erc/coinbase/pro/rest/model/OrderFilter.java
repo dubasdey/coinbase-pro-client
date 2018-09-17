@@ -16,6 +16,22 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-public class OrderFilter {
+import java.util.List;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * The Class OrderFilter.
+ */
+@Data
+@EqualsAndHashCode(callSuper=true)
+public class OrderFilter extends PaginationFilter {
+
+	/** The status. */
+	private List<String> status;
+	
+	/** The product id. */
+	private String productId;
+	
 }

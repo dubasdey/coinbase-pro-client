@@ -18,13 +18,17 @@ package org.erc.coinbase.pro.rest.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.Data;
 
 /**
  * Instantiates a new order request.
  */
 @Data
-public class OrderRequest {
+@JsonInclude(Include.NON_NULL)
+public abstract class OrderRequest {
 
 	/** The size. */
 	private BigDecimal size;
@@ -33,8 +37,17 @@ public class OrderRequest {
 	private BigDecimal price;
 	
 	/** The side. */
-	private String side;
+	private OrderSide side;
 	
 	/** The product id. */
 	private String product_id;
+	
+	private String client_oid;
+	
+	private String stp;
+	
+	private String stop;
+		
+	private BigDecimal stop_price;
+	
 }

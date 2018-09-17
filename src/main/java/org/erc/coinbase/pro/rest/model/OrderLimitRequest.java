@@ -16,20 +16,33 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new product trades filter.
+ * The Class OrderLimitRequest.
  */
 @Data
-
-/* (non-Javadoc)
- * @see org.erc.coinbase.pro.rest.model.PaginationFilter#hashCode()
- */
 @EqualsAndHashCode(callSuper=true)
-public class ProductTradesFilter extends PaginationFilter {
+public class OrderLimitRequest extends OrderRequest {
 
-	/** The product id. */
-	private String productId; 
+	/** The type. */
+	private final String type = "limit";
+	
+	/** The price. */
+	private BigDecimal price;
+	
+	/** The size. */
+	private BigDecimal size;
+	
+	/** The time in force. */
+	private String time_in_force;
+	
+	/** The cancel after. */
+	private String cancel_after;
+	
+	/** The post only. */
+	private boolean post_only;
 }

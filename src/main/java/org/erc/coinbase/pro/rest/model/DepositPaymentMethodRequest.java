@@ -20,16 +20,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new product trades filter.
+ * The Class DepositPaymentMethodRequest.
  */
 @Data
-
-/* (non-Javadoc)
- * @see org.erc.coinbase.pro.rest.model.PaginationFilter#hashCode()
- */
 @EqualsAndHashCode(callSuper=true)
-public class ProductTradesFilter extends PaginationFilter {
+public class DepositPaymentMethodRequest extends DepositRequest {
 
-	/** The product id. */
-	private String productId; 
+	/** The payment method id. */
+	private String payment_method_id;
 }

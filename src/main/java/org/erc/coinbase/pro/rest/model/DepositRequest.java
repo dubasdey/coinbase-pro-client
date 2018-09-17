@@ -16,6 +16,19 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-public class DepositRequest {
+import java.math.BigDecimal;
 
+import lombok.Data;
+
+/**
+ * The Class DepositRequest.
+ */
+@Data
+public abstract class DepositRequest {
+
+	/** The amount. */
+	private BigDecimal amount;
+	
+	/** The currency. */
+	private String currency;
 }

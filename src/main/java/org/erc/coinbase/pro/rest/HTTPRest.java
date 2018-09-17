@@ -16,15 +16,16 @@
  */
 package org.erc.coinbase.pro.rest;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +36,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -47,6 +49,7 @@ import org.erc.coinbase.pro.rest.exceptions.InvalidAPIKeyException;
 import org.erc.coinbase.pro.rest.exceptions.InvalidRequestException;
 import org.erc.coinbase.pro.rest.exceptions.NotFoundException;
 import org.erc.coinbase.pro.rest.exceptions.ServerException;
+import org.erc.coinbase.pro.rest.exceptions.SignatureException;
 import org.erc.coinbase.pro.rest.exceptions.TooManyRequestException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -81,16 +84,10 @@ final class HTTPRest {
 	/** The httpclient. */
 	private  CloseableHttpClient httpclient;
 	
-	/**
-	 * Sets the proxy config.
-	 */
+	/** Sets the proxy config */
 	@Getter
 	
-	/**
-	 * Sets the sets the proxy config.
-	 *
-	 * @param proxyConfig the new sets the proxy config
-	 */
+	/** Sets the sets the proxy config */
 	@Setter
 	private ProxyConfig proxyConfig;
 	
@@ -111,7 +108,7 @@ final class HTTPRest {
 	}
 	
 	/**
-	 * Inits the.
+	 * Inits the HTTP Rest client.
 	 */
 	private void init() {
 		if(httpclient == null) {
@@ -146,7 +143,94 @@ final class HTTPRest {
 	}
 	
 	/**
-	 * Post.
+	 * Inject headers.
+	 *
+	 * @param request the request
+	 */
+	private void injectHeaders(HttpUriRequest request ) {
+		request.addHeader("accept","application/json");
+	    request.addHeader("content-type", "application/json");
+	    request.addHeader("Accept-Language", "en");
+	}
+	
+	/**
+	 * Inject security headers
+	 *
+	 * @param request      the request
+	 * @param resourcePath the resource path
+	 * @param method       the method
+	 * @param body         the body
+	 * @throws SignatureException the signature exception
+	 */
+	private void injectSecurity(HttpUriRequest request ,String resourcePath,String method,String body) throws SignatureException {
+		String timestamp = Instant.now().getEpochSecond() + "";
+		Signature signature = new Signature(secretKey,resourcePath,method,body,timestamp);
+		request.addHeader("CB-ACCESS-KEY", publicKey);
+		request.addHeader("CB-ACCESS-SIGN", signature.toString());
+		request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
+		request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);		
+	}
+	
+	/**
+	 * Builds the path.
+	 *
+	 * @param resourcePath the resource path
+	 * @param params       the params
+	 * @return the string
+	 * @throws URISyntaxException the URI syntax exception
+	 */
+	private String buildPath(String resourcePath,Map<String,Object> params) throws URISyntaxException {
+		String finalPath =  resourcePath;
+		if(params!=null && !params.isEmpty()) {
+			URIBuilder builder = new URIBuilder(resourcePath);
+			for(Entry<String,Object> param: params.entrySet()) {
+				if(param instanceof Collection) {
+					Collection<?> it = (Collection<?>) param;
+					if(it !=null && !it.isEmpty()){
+						for(Object item : it) {
+							builder.setParameter(param.getKey(), parameterFormat(item));	
+						}
+					}
+				}else {
+					builder.setParameter(param.getKey(), parameterFormat(param.getValue()));
+				}
+			}
+			finalPath = builder.build().toString();
+		}
+		return finalPath;
+	}
+	
+	/**
+	 * Execute.
+	 *
+	 * @param  <T> the generic type
+	 * @param request the request
+	 * @param type    the type
+	 * @return the t
+	 * @throws UnsupportedOperationException the unsupported operation exception
+	 * @throws IOException                   Signals that an I/O exception has
+	 *                                       occurred.
+	 * @throws CoinbaseException             the coinbase exception
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T execute(HttpUriRequest request,TypeReference<T> type) throws UnsupportedOperationException, IOException, CoinbaseException {
+		CloseableHttpResponse response = httpclient.execute(request);
+		int responseCode = response.getStatusLine().getStatusCode();
+		String jsonResponse = readStream(response.getEntity().getContent(),"UTF-8" );
+		response.close();
+		log.debug(String.format("< Response %s:%s",responseCode,jsonResponse));
+		if (responseCode < 300) { 
+			if(type!=null) {
+				return (T) mapper.readValue(jsonResponse,type);
+			}
+		}else {
+			raiseResponseException(responseCode,jsonResponse);
+		}				
+		return null;
+	}
+	
+	/**
+	 * Post the Resource.
 	 *
 	 * @param               <T> the generic type
 	 * @param               <R> the generic type
@@ -156,50 +240,24 @@ final class HTTPRest {
 	 * @return the t
 	 * @throws CoinbaseException the coinbase exception
 	 */
-	@SuppressWarnings("unchecked")
 	public <T,R> T post(String resourcePath,TypeReference<T> type,R requestObject) throws CoinbaseException {
-		T resultObject = null;
 		try {
-			log.debug(String.format("> Request %s",resourcePath));
-			init();
-			HttpPost request = new HttpPost(baseUrl + resourcePath);
-			request.addHeader("accept","application/json");
-		    request.addHeader("content-type", "application/json");
-		    request.addHeader("Accept-Language", "en");
-		        
-		    // Securing
-			String timestamp = Instant.now().getEpochSecond() + "";
-			Signature signature = new Signature(secretKey,resourcePath,"GET","",timestamp);
-			request.addHeader("CB-ACCESS-KEY", publicKey);
-			request.addHeader("CB-ACCESS-SIGN", signature.toString());
-			request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
-			request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);
-		        
 			String requestJson = mapper.writeValueAsString(requestObject);
 			log.debug(String.format("> Request %s JSON: %s",resourcePath,requestJson));
-			StringEntity entity = new StringEntity(requestJson);
-			request.setEntity(entity);
-			CloseableHttpResponse response = httpclient.execute(request);
-			
-			int responseCode = response.getStatusLine().getStatusCode();
-			String jsonResponse = readStream(response.getEntity().getContent(),"UTF-8" );
-			response.close();
-			log.debug(String.format("< Response %s:%s",responseCode,jsonResponse));
-			if (responseCode < 300) { 
-				resultObject = (T) mapper.readValue(jsonResponse,type);
-			}else {
-				raiseResponseException(responseCode,jsonResponse);
-			}
-			
+			init();
+			HttpPost request = new HttpPost(baseUrl + resourcePath);
+			injectHeaders(request);
+			injectSecurity(request,resourcePath,"POST",requestJson);
+			request.setEntity(new StringEntity(requestJson));
+			return execute(request,type);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			throw new ServerException(e.getMessage(),e);
 		}
-		return resultObject;
 	}
-	
+
 	/**
-	 * Gets the.
+	 * Gets the Resource.
 	 *
 	 * @param              <T> the generic type
 	 * @param resourcePath the resource path
@@ -209,57 +267,36 @@ final class HTTPRest {
 	 * @return the t
 	 * @throws CoinbaseException the coinbase exception
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T get(String resourcePath, TypeReference<T> type,Map<String,Object> params,boolean secured) throws CoinbaseException {
-		T resultObject = null;
 		try {
 			log.debug(String.format("> Request %s",resourcePath));
-		    
 			init();
-			HttpGet request;
-			if(params!=null && !params.isEmpty()) {
-				URIBuilder builder = new URIBuilder(baseUrl + resourcePath);
-				for(Entry<String,Object> param: params.entrySet()) {
-					builder.setParameter(param.getKey(), parameterFormat(param.getValue()));
-				}
-				request = new HttpGet(builder.build());
-			}else {
-				request = new HttpGet(baseUrl + resourcePath);
+			HttpGet request = new HttpGet(baseUrl + buildPath(resourcePath,params));
+			injectHeaders(request);
+			if(secured) {				
+				injectSecurity(request,resourcePath,"GET","");
 			}
-
-	        request.addHeader("accept","application/json");
-	        request.addHeader("content-type", "application/json");
-	        request.addHeader("Accept-Language", "en");
-	        
-			if(secured) {
-				String timestamp = Instant.now().getEpochSecond() + "";
-				Signature signature = new Signature(secretKey,resourcePath,"GET","",timestamp);
-				request.addHeader("CB-ACCESS-KEY", publicKey);
-				request.addHeader("CB-ACCESS-SIGN", signature.toString());
-				request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
-				request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);
-			}
-		
-			CloseableHttpResponse response = httpclient.execute(request);
-			
-			int responseCode = response.getStatusLine().getStatusCode();
-			String jsonResponse = readStream(response.getEntity().getContent(),"UTF-8" );
-			response.close();
-			
-			log.debug(String.format("< Response %s:%s",responseCode,jsonResponse));
-
-			if (responseCode < 300) { 
-				resultObject = (T) mapper.readValue(jsonResponse,type);
-			}else {
-				raiseResponseException(responseCode,jsonResponse);
-			}
+			return execute(request,type);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			throw new ServerException(e.getMessage(),e);
 		}
-		return resultObject;
 	}    
 	
+	
+	public <T> T delete(String resourcePath, TypeReference<T> type,Map<String,Object> params) throws CoinbaseException {
+		try {
+			log.debug(String.format("> Request %s",resourcePath));
+			init();
+			HttpGet request = new HttpGet(baseUrl + buildPath(resourcePath,params));
+			injectHeaders(request);
+			injectSecurity(request,resourcePath,"GET","");
+			return execute(request,type);
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw new ServerException(e.getMessage(),e);
+		}
+	}
 	/**
 	 * Raise response exception.
 	 *
@@ -287,21 +324,16 @@ final class HTTPRest {
 	/**
 	 * Read stream.
 	 *
-	 * @param inputStr the input str
+	 * @param inputStream the input str
 	 * @param encoding the encoding
 	 * @return the string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private String readStream(InputStream inputStr,String encoding) throws IOException {
-		BufferedInputStream bis = new BufferedInputStream(inputStr);
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		int buffer = 4006;
-		byte[] items = new byte[buffer];
-		int readed = buffer;
-		while(readed>= buffer) {
-			readed = bis.read(items);
-			buf.write(items, 0, readed);
-		}
-		return buf.toString(encoding);
+	private String readStream(InputStream inputStream,String encoding) throws IOException {
+		String text = null;
+	    try (Scanner scanner = new Scanner(inputStream, encoding)) {
+	        text = scanner.useDelimiter("\\A").next();
+	    }
+	   return text;
 	}
 }
