@@ -16,6 +16,24 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-public class CandleRequest {
+import java.util.Date;
 
+import lombok.Data;
+
+/**
+ * Instantiates a new product candle filter.
+ */
+@Data
+public class ProductCandleFilter {
+
+	private String productId;
+	
+	/** The start. */
+	private Date start;
+	
+	/** The end. */
+	private Date end;
+	
+	/** The granularity. */
+	private Granularity granularity;
 }
