@@ -16,6 +16,32 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+/**
+ * The Class Trade.
+ */
+@Data
 public class Trade {
 
+	/** The time. */
+	private Date time;
+	
+	/** The trade id. */
+	@JsonProperty("trade_id")
+	private String tradeId;
+	
+	/** The price. */
+	private BigDecimal price;
+	
+	/** The size. */
+	private BigDecimal size;
+	
+	/** The side. */
+	private String side;
 }

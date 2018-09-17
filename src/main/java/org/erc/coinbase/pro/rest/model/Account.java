@@ -19,22 +19,37 @@ package org.erc.coinbase.pro.rest.model;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+/**
+ * The Class Account.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
+
+/**
+ * Instantiates a new account.
+ */
 @Data
 public class Account {
 
+	/** The id. */
 	private String id;
 	
+	/** The balance. */
 	private BigDecimal balance;
 	
+	/** The holds. */
 	private BigDecimal holds;
 	
+	/** The available. */
 	private BigDecimal available;
 	
+	/** The currency. */
 	private String currency;
 
-	private String profile_id;
+	/** The profile id. */
+	@JsonProperty("profile_id")
+	private String profileId;
 }

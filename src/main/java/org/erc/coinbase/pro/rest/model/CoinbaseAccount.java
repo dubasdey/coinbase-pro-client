@@ -16,6 +16,40 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+/**
+ * The Class CoinbaseAccount.
+ */
+@Data
 public class CoinbaseAccount {
 
+	/** The id. */
+	private String id;
+	
+	/** The name. */
+	private String name;
+	
+	/** The balance. */
+	private BigDecimal balance;
+	
+	/** The currency. */
+	private String currency;
+	
+	/** The type. */
+	private String type;
+	
+	/** The primary. */
+	private boolean primary;
+	
+	/** The active. */
+	private boolean active;
+	
+	/** The wire deposit information. */
+	@JsonProperty("wire_deposit_information")
+	private CoinbaseAccountWireDeposit wireDeposit;
 }

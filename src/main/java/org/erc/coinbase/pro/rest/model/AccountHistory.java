@@ -19,6 +19,8 @@ package org.erc.coinbase.pro.rest.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -31,7 +33,8 @@ public class AccountHistory {
 	private String id;
 	
 	/** The created at. */
-	private Date created_at;
+	@JsonProperty("created_at")
+	private Date created;
 	
 	/** The amount. */
 	private BigDecimal amount;

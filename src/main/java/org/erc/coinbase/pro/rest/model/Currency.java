@@ -18,6 +18,8 @@ package org.erc.coinbase.pro.rest.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -33,7 +35,8 @@ public class Currency {
 	private String name;
 	
 	/** The min size. */
-	private BigDecimal min_size;
+	@JsonProperty("min_size")
+	private BigDecimal minSize;
 	
 	private String status;
 	

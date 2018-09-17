@@ -16,6 +16,20 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import lombok.Data;
+
+/**
+ * Instantiates a new book.
+ */
+@Data
 public class Book {
 
+	/** The sequence. */
+	private String sequence;
+	
+	/** The bids. */
+	private String[][] bids;
+	
+	/** The aks. */
+	private String[][] asks;
 }

@@ -240,18 +240,50 @@ public class Client {
     }
     
     /**
-	 * Gets the coinbase accounts.
+	 * Gets the coinbase accounts
+	 * 
+	 * Get a list of your coinbase accounts.
+	 * Visit the Coinbase accounts API for more information.
+	 * 
+	 * 	HTTP Request
+	 * 		GET /coinbase-accounts
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires either the “view” or “transfer” permission.
 	 *
 	 * @return the coinbase accounts
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<CoinbaseAccount> getCoinbaseAccounts() throws CoinbaseException {
-    	//TODO 
-    	return null; 
+    	return http.get("/coinbase-accounts", new TypeReference<List<CoinbaseAccount>>() {},null, true);
     }
     
     /**
-	 * Creates the report.
+	 * Create a new report
+	 * Reports provide batches of historic information about your account in various human and machine readable forms.
+	 * 	HTTP request
+	 * 		POST /reports
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires either the “view” or “trade” permission.
+	 * 
+	 * 	Parameters
+	 * 		Param 			Description
+	 * 		type 			fills or account
+	 * 		start_date 		Starting date for the report (inclusive)
+	 * 		end_date 		Ending date for the report (inclusive)
+	 * 		product_id 		ID of the product to generate a fills report for. E.g. BTC-USD. Required if type is fills
+	 * 		account_id 		ID of the account to generate an account report for. Required if type is account
+	 * 		format 			pdf or csv (defualt is pdf)
+	 * 		email 			Email address to send the report to (optional)
+	 * 
+	 * 	The report will be generated when resources are available. Report status can be queried via 
+	 * 	the /reports/:report_id endpoint. The file_url field will be available once the report has successfully 
+	 * 	been created and is available for download.
+	 * 
+	 * 	Expired reports
+	 * 	Reports are only available for download for a few days after being created. Once a report expires, 
+	 * 	the report is no longer available for download and is deleted.
 	 *
 	 * @param request the request
 	 * @return the report
@@ -264,25 +296,48 @@ public class Client {
     
     /**
 	 * Gets the report status.
-	 *
+	 * 	HTTP request
+	 * 		GET /reports/:report_id
+	 * 
+	 * 	Once a report request has been accepted for processing, the status is available by 
+	 * 	polling the report resource endpoint.
+	 * 
+	 * 	The final report will be uploaded and available at file_url once the status indicates ready
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires either the “view” or “trade” permission.
+	 * 
+	 * 	Status
+	 * 		Status 	Description
+	 * 		pending 	The report request has been accepted and is awaiting processing
+	 * 		creating 	The report is being created
+	 * 		ready 		The report is ready for download from file_url
 	 * @param id the id
 	 * @return the report status
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Report getReportStatus(String id) throws CoinbaseException {
-    	//TODO 
-    	return null; 
+    	if(id == null || id.isEmpty()) {
+    		throw new RequiredParameterException("report_id");
+    	}    	
+    	return http.get(String.format("/reports/%s",id), new TypeReference<Report>() {},null, true);
     }
     
     /**
 	 * Gets the trailing volume.
+	 * HTTP request
+	 * 		GET /users/self/trailing-volume
+	 * 
+	 * API Key Permissions
+	 * 	This endpoint requires either the “view” or “trade” permission.
+	 * 	This request will return your 30-day trailing volume for all products. 
+	 * 	This is a cached value that’s calculated every day at midnight UTC.
 	 *
 	 * @return the trailing volume
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<TrailingVolume> getTrailingVolume() throws CoinbaseException {
-    	//TODO 
-    	return null; 
+    	return http.get("/users/self/trailing-volume", new TypeReference<List<TrailingVolume>>() {},null, true);
     }
     
     /**
@@ -306,7 +361,6 @@ public class Client {
 		putIfAbsent(filter, "base_min_size", productFilter.getMinSize());
 		putIfAbsent(filter, "base_max_size", productFilter.getMaxSize());
 		putIfAbsent(filter, "quote_increment", productFilter.getIncrement());
-    	
     	return http.get("/products", new TypeReference<List<Product>>() {},filter, false);
     }
     

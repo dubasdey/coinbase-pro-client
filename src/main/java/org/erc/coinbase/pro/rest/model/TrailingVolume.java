@@ -16,6 +16,32 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+
+/**
+ * The Class TrailingVolume.
+ */
+@Data
 public class TrailingVolume {
 
+	/** The product id. */
+	@JsonProperty("product_id")
+	private String productId;
+	
+	/** The exchange volume. */
+	@JsonProperty("exchange_volume")
+	private BigDecimal exchangeVolume;
+	
+	/** The volume. */
+	private BigDecimal volume;
+	
+	/** The recorded at. */
+	@JsonProperty("recorded_at")
+	private Date recorded;
 }
