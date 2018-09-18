@@ -7,3 +7,11 @@ jdk:
 install: false
 
 script: mvn clean package -DskipTests=true
+
+deploy:
+  provider: releases
+  api_key: $GITAPI
+  file: "target/PortableFTPServer.jar"
+  skip_cleanup: true
+  on:
+    tags: true
