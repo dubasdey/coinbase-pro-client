@@ -54,4 +54,6 @@ public class ClientTest {
 		Date value = client.getTime();
 		assertNotNull(value);
 	}
+	
+	
 }

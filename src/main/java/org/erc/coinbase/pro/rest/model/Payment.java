@@ -16,6 +16,41 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import lombok.Data;
+
+/**
+ * The Class Payment.
+ */
+@Data
 public class Payment {
 
+	/** The id. */
+	private String id;
+	
+	/** The type. */
+	private String type;
+	
+	/** The name. */
+	private String name;
+	
+	/** The primary buy. */
+	private boolean primary_buy;
+	
+	/** The primary sell. */
+	private boolean primary_sell;
+	
+	/** The allow buy. */
+	private boolean allow_buy;
+	
+	/** The allow sell. */
+	private boolean allow_sell;
+	
+	/** The allow deposit. */
+	private boolean allow_deposit;
+	
+	/** The allow withdraw. */
+	private boolean allow_withdraw;
+	
+	/** The limits. */
+	private PaymentLimits limits;
 }

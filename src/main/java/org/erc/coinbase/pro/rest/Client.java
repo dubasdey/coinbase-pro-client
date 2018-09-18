@@ -486,37 +486,140 @@ public class Client {
     
     /**
 	 * Deposit.
+	 * 
+	 * Payment method (DepositPaymentMethodRequest)
+	 * 
+	 * Deposit funds from a payment method. See the Payment Methods section for retrieving your payment methods.
+	 * 
+	 * 	HTTP request
+	 * 		POST /deposits/payment-method
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
+	 * 
+	 * 	Parameters
+	 * 		Param 				Description
+	 * 		amount 				The amount to deposit
+	 * 		currency 			The type of currency
+	 * 		payment_method_id 	ID of the payment method
+	 *
+	 * Coinbase (DepositCoinbaseRequest)
+	 * 
+	 * Deposit funds from a coinbase account. You can move funds between your Coinbase accounts and your 
+	 * Coinbase Pro trading accounts within your daily limits. Moving funds between Coinbase and Coinbase 
+	 * Pro is instant and free. See the Coinbase Accounts section for retrieving your Coinbase accounts.
+	 * 
+	 * 	HTTP request
+	 * 		POST /deposits/coinbase-account
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
+	 * 
+	 * 	Parameters
+	 * 	Param 					Description
+	 * 	amount 					The amount to deposit
+	 * 	currency 				The type of currency
+	 * 	coinbase_account_id 	ID of the coinbase account
 	 *
 	 * @param deposit the deposit
 	 * @return the deposit
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Deposit deposit(DepositRequest deposit) throws CoinbaseException {
-    	//TODO 
+    	if( deposit instanceof  DepositCoinbaseRequest) {
+    		http.post("/deposits/coinbase-account", new TypeReference<List<Deposit>>() {}, deposit);
+    	} else if (deposit instanceof DepositPaymentMethodRequest) {
+    		http.post("/deposits/payment-method", new TypeReference<List<Deposit>>() {}, deposit);
+    	} else {
+    		throw new RequiredParameterException("DepositCoinbaseRequest or DepositPaymentMethodRequest");
+    	}
     	return null; 
     }
     
     /**
 	 * Withdrawal.
+	 * 
+	 * Payment method
+	 * 
+	 * Withdraw funds to a payment method. See the Payment Methods section for retrieving your payment methods.
+	 * 
+	 * 	HTTP request
+	 * 		POST /withdrawals/payment-method
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
+	 * 
+	 * 	Parameters
+	 * 		Param 				Description
+	 * 		amount 				The amount to withdraw
+	 * 		currency 			The type of currency
+	 * 		payment_method_id 	ID of the payment method
 	 *
+	 * Coinbase
+	 * Withdraw funds to a coinbase account. You can move funds between your Coinbase accounts and your 
+	 * Coinbase Pro trading accounts within your daily limits. Moving funds between Coinbase and Coinbase 
+	 * Pro is instant and free. See the Coinbase Accounts section for retrieving your Coinbase accounts.
+	 * 
+	 * 	HTTP request
+	 * 		POST /withdrawals/coinbase-account
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
+	 * 
+	 * 	Parameters
+	 * 		Param 					Description
+	 * 		amount 					The amount to withdraw
+	 * 		currency 				The type of currency
+	 * 		coinbase_account_id 	ID of the coinbase account
+	 *
+	 * Crypto
+	 * 	Withdraws funds to a crypto address.
+	 * 
+	 * 	HTTP request
+	 * 		POST /withdrawals/crypto
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
+	 * 
+	 * 	Parameters
+	 * 		Param 				Description
+	 * 		amount 				The amount to withdraw
+	 * 		currency 			The type of currency
+	 * 		crypto_address 		A crypto address of the recipient
+	 * 
 	 * @param deposit the deposit
 	 * @return the withdrawal
 	 * @throws CoinbaseException the coinbase exception
 	 */
-    public Withdrawal withdrawal(WithdrawalRequest deposit) throws CoinbaseException {
+    public Withdrawal withdrawal(WithdrawalRequest withdrawal) throws CoinbaseException {
     	//TODO 
+    	if (withdrawal instanceof WithdrawalRequestCoinbase) {
+    		
+    	} else if (withdrawal instanceof WithdrawalRequestPaymentMethod) {
+    		
+    	} else if (withdrawal instanceof WithdrawalRequestCrypto) {
+    		
+    	} else {
+    		throw new RequiredParameterException("WithdrawalRequestCoinbase or WithdrawalRequestPaymentMethod or WithdrawalRequestCrypto");
+    	}
     	return null; 
     }
     
     /**
 	 * Gets the payment methods.
+	 * Get a list of your payment methods
+	 * 
+	 * 	HTTP Request
+	 * 		GET /payment-methods
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “transfer” permission.
 	 *
 	 * @return the payment methods
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<Payment> getPaymentMethods() throws CoinbaseException {
-    	//TODO 
-    	return null; 
+    	return http.get("/payment-methods", new TypeReference<List<Payment>>() {},null, true);
     }
     
     /**

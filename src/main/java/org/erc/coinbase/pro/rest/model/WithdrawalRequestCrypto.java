@@ -16,19 +16,16 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-import java.math.BigDecimal;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * The Class WithdrawalRequest.
+ * The Class WithdrawalRequestCrypto.
  */
 @Data
-public abstract class WithdrawalRequest {
-	
-	/** The amount. */
-	private BigDecimal amount;
-	
-	/** The currency. */
-	private String currency;
+@EqualsAndHashCode(callSuper=true)
+public class WithdrawalRequestCrypto  extends WithdrawalRequest{
+
+	/** The crypto address. */
+	private String crypto_address;
 }

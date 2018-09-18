@@ -16,19 +16,20 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
-import java.math.BigDecimal;
-
 import lombok.Data;
 
 /**
- * The Class WithdrawalRequest.
+ * The Class PaymentLimit.
  */
 @Data
-public abstract class WithdrawalRequest {
+public class PaymentLimit {
+
+	/** The period in days. */
+	private Integer period_in_days;
 	
-	/** The amount. */
-	private BigDecimal amount;
+	/** The total. */
+	private PaymentLimitTotal total;
 	
-	/** The currency. */
-	private String currency;
+	/** The remaining. */
+	private PaymentLimitTotal remaining;
 }

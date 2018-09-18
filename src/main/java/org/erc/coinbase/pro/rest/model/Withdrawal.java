@@ -16,6 +16,25 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
+import lombok.Data;
+
+/**
+ * The Class Withdrawal.
+ */
+@Data
 public class Withdrawal {
 
+	/** The id. */
+	private String id;
+	
+	/** The amount. */
+	private BigDecimal amount;
+	
+	/** The currency. */
+	private String currency;
+	
+	/** Payout */
+	private String payout_at;
 }

@@ -21,14 +21,15 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 /**
- * The Class WithdrawalRequest.
+ * The Class PaymentLimitTotal.
  */
 @Data
-public abstract class WithdrawalRequest {
-	
+public class PaymentLimitTotal {
+
 	/** The amount. */
 	private BigDecimal amount;
 	
 	/** The currency. */
-	private String currency;
+	private String currency; 
+	
 }
