@@ -19,6 +19,8 @@ package org.erc.coinbase.pro.rest.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -37,7 +39,8 @@ public class Order {
 	private BigDecimal size;
 	
 	/** The product id. */
-	private String product_id;
+	@JsonProperty("product_id")
+	private String productId;
 	
 	/** The side. */
 	private String side;
@@ -49,22 +52,28 @@ public class Order {
 	private String type;
 	
 	/** The time in force. */
-	private String time_in_force;
+	@JsonProperty("time_in_force")
+	private String timeInForce;
 	
 	/** The post only. */
-	private Boolean post_only;
+	@JsonProperty("post_only")
+	private Boolean postOnly;
 	
 	/** The created at. */
-	private Date created_at;
+	@JsonProperty("created_at")
+	private Date created;
 	
 	/** The fill fees. */
-	private BigDecimal fill_fees;
+	@JsonProperty("fill_fees")
+	private BigDecimal fillFees;
 	
 	/** The filled size. */
-	private BigDecimal filled_size;
+	@JsonProperty("filled_size")
+	private BigDecimal filledSize;
 	
 	/** The executed value. */
-	private BigDecimal executed_value;
+	@JsonProperty("executed_value")
+	private BigDecimal executedValue;
 	
 	/** The status. */
 	private String status;

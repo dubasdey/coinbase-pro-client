@@ -18,15 +18,26 @@ package org.erc.coinbase.pro.rest.model;
 
 import lombok.Data;
 
+/**
+ * Instantiates a new pagination filter.
+ */
 @Data
 public abstract class PaginationFilter {
 
+	/** The before. */
 	private String before;
 	
+	/** The after. */
 	private String after;
 	
+	/** The limit. */
 	private int limit;
 	
+	/**
+	 * Checks for pagination.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasPagination() {
 		return before !=null || after != null || limit >0;
 	}

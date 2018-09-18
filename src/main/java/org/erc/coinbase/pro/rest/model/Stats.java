@@ -16,6 +16,25 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.math.BigDecimal;
+
+import lombok.Data;
+
+/**
+ * The Class Stats.
+ */
+@Data
 public class Stats {
 
+	/** The open. */
+	private BigDecimal open;
+	
+	/** The high. */
+	private BigDecimal high;
+	
+	/** The low. */
+	private BigDecimal low;
+	
+	/** The volume. */
+	private BigDecimal volume;
 }

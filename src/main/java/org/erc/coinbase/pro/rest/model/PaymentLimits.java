@@ -18,6 +18,8 @@ package org.erc.coinbase.pro.rest.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -30,7 +32,8 @@ public class PaymentLimits {
 	private List<PaymentLimit> buy;
 	
 	/** The instant buy. */
-	private List<PaymentLimit> instant_buy;
+	@JsonProperty("instant_buy")
+	private List<PaymentLimit> instantBuy;
 	
 	/** The sell. */
 	private List<PaymentLimit> sell;

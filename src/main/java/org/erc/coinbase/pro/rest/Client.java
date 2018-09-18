@@ -480,7 +480,7 @@ public class Client {
     	Map<String,Object> filter = new HashMap<>();
     	putIfAbsent(filter, "order_id", fillFilter.getOrderId());
     	putIfAbsent(filter, "product_id", fillFilter.getProductId());
-    	//TODO Paging
+    	//TODO Pagination
     	return http.get("/fills", new TypeReference<List<Fill>>() {},filter, true);
     }
     
@@ -527,13 +527,12 @@ public class Client {
 	 */
     public Deposit deposit(DepositRequest deposit) throws CoinbaseException {
     	if( deposit instanceof  DepositCoinbaseRequest) {
-    		http.post("/deposits/coinbase-account", new TypeReference<List<Deposit>>() {}, deposit);
+    		return http.post("/deposits/coinbase-account", new TypeReference<Deposit>() {}, deposit);
     	} else if (deposit instanceof DepositPaymentMethodRequest) {
-    		http.post("/deposits/payment-method", new TypeReference<List<Deposit>>() {}, deposit);
+    		return http.post("/deposits/payment-method", new TypeReference<Deposit>() {}, deposit);
     	} else {
     		throw new RequiredParameterException("DepositCoinbaseRequest or DepositPaymentMethodRequest");
     	}
-    	return null; 
     }
     
     /**
@@ -592,17 +591,15 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Withdrawal withdrawal(WithdrawalRequest withdrawal) throws CoinbaseException {
-    	//TODO 
     	if (withdrawal instanceof WithdrawalRequestCoinbase) {
-    		
+    		return http.post("/withdrawals/coinbase-account", new TypeReference<Withdrawal>() {}, withdrawal);
     	} else if (withdrawal instanceof WithdrawalRequestPaymentMethod) {
-    		
+    		return http.post("/withdrawals/payment-method", new TypeReference<Withdrawal>() {}, withdrawal);
     	} else if (withdrawal instanceof WithdrawalRequestCrypto) {
-    		
+    		return http.post("/withdrawals/crypto", new TypeReference<Withdrawal>() {}, withdrawal);
     	} else {
     		throw new RequiredParameterException("WithdrawalRequestCoinbase or WithdrawalRequestPaymentMethod or WithdrawalRequestCrypto");
     	}
-    	return null; 
     }
     
     /**
@@ -643,7 +640,9 @@ public class Client {
     
     /**
 	 * Create a new report
-	 * Reports provide batches of historic information about your account in various human and machine readable forms.
+	 * 	Reports provide batches of historic information about your account in various human and machine 
+	 * 	readable forms.
+	 * 
 	 * 	HTTP request
 	 * 		POST /reports
 	 * 
@@ -673,8 +672,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Report createReport(ReportRequest request) throws CoinbaseException {
-    	//TODO 
-    	return null; 
+    	return http.post("/reports", new TypeReference<Report>() {}, request);
     }
     
     /**

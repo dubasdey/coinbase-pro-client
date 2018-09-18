@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -25,7 +27,8 @@ import lombok.Data;
 public class PaymentLimit {
 
 	/** The period in days. */
-	private Integer period_in_days;
+	@JsonProperty("period_in_days")
+	private Integer period;
 	
 	/** The total. */
 	private PaymentLimitTotal total;

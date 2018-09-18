@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,5 +29,6 @@ import lombok.EqualsAndHashCode;
 public class DepositPaymentMethodRequest extends DepositRequest {
 
 	/** The payment method id. */
-	private String payment_method_id;
+	@JsonProperty("payment_method_id")
+	private String paymentMethodId;
 }

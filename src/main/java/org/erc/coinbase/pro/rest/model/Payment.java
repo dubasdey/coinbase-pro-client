@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -34,22 +36,28 @@ public class Payment {
 	private String name;
 	
 	/** The primary buy. */
-	private boolean primary_buy;
+	@JsonProperty("primary_buy")
+	private boolean primaryBuy;
 	
 	/** The primary sell. */
-	private boolean primary_sell;
+	@JsonProperty("primary_sell")
+	private boolean primarySell;
 	
 	/** The allow buy. */
-	private boolean allow_buy;
+	@JsonProperty("allow_buy")
+	private boolean allowBuy;
 	
 	/** The allow sell. */
-	private boolean allow_sell;
+	@JsonProperty("allow_sell")
+	private boolean allowSell;
 	
 	/** The allow deposit. */
-	private boolean allow_deposit;
+	@JsonProperty("allow_deposit")
+	private boolean allowDeposit;
 	
 	/** The allow withdraw. */
-	private boolean allow_withdraw;
+	@JsonProperty("allow_withdraw")
+	private boolean allowWithdraw;
 	
 	/** The limits. */
 	private PaymentLimits limits;

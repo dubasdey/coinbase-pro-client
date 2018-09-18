@@ -19,6 +19,8 @@ package org.erc.coinbase.pro.rest.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -28,10 +30,12 @@ import lombok.Data;
 public class Fill {
 
 	/** The trade id. */
-	private String trade_id;
+	@JsonProperty("trade_id")
+	private String tradeId;
 	
 	/** The product id. */
-	private String product_id;
+	@JsonProperty("product_id")
+	private String productId;
 	
 	/** The price. */
 	private BigDecimal price;
@@ -40,10 +44,12 @@ public class Fill {
 	private BigDecimal size;
 	
 	/** The order id. */
-	private String order_id;
+	@JsonProperty("order_id")
+	private String orderId;
 	
 	/** The created at. */
-	private Date created_at;
+	@JsonProperty("created_at")
+	private Date created;
 	
 	/** The liquidity. */
 	private String liquidity;

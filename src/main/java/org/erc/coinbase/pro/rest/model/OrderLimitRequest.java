@@ -18,6 +18,8 @@ package org.erc.coinbase.pro.rest.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,11 +40,14 @@ public class OrderLimitRequest extends OrderRequest {
 	private BigDecimal size;
 	
 	/** The time in force. */
-	private String time_in_force;
+	@JsonProperty("time_in_force")
+	private String timeInForce;
 	
 	/** The cancel after. */
-	private String cancel_after;
+	@JsonProperty("cancel_after")
+	private String cancelAfter;
 	
 	/** The post only. */
-	private boolean post_only;
+	@JsonProperty("post_only")
+	private boolean postOnly;
 }

@@ -16,6 +16,40 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+/**
+ * The Class ReportRequest.
+ */
+@Data
 public class ReportRequest {
 
+	/** The type. */
+	private String type;
+	
+	/** The start date. */
+	@JsonProperty("start_date")
+	private Date startDate;
+	
+	/** The end date. */
+	@JsonProperty("end_date")
+	private Date endDate;
+	
+	/** The product id. */
+	@JsonProperty("product_id")
+	private String productId;
+	
+	/** The account id. */
+	@JsonProperty("account_id")
+	private String accountId;
+	
+	/** The format. */
+	private String format;
+	
+	/** The email. */
+	private String email;
 }

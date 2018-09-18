@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,5 +29,6 @@ import lombok.EqualsAndHashCode;
 public class DepositCoinbaseRequest extends DepositRequest {
 
 	/** The coinbase account id. */
-	private String coinbase_account_id;
+	@JsonProperty("coinbase_account_id")
+	private String coinbaseAccountId;
 }

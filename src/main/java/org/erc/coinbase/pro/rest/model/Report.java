@@ -16,6 +16,43 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+/**
+ * The Class Report.
+ */
+@Data
 public class Report {
 
+	/** The id. */
+	private String id;
+	
+	/** The type. */
+	private String type;
+	
+	/** The status. */
+	private String status;
+	
+	/** The created at. */
+	@JsonProperty("created_at")
+	private Date created;
+	
+	/** The completed at. */
+	@JsonProperty("completed_at")
+	private Date completed;
+
+	/** The expires at. */
+	@JsonProperty("expires_at")
+	private Date expires;
+	
+	/** The file url. */
+	@JsonProperty("file_url")
+	private String fileUrl;
+	
+	/** The params. */
+	private ReportRequest params;
 }

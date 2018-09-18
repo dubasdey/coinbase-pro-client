@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,8 +26,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class WithdrawalRequestCrypto  extends WithdrawalRequest{
+public class WithdrawalRequestCrypto extends WithdrawalRequest{
 
 	/** The crypto address. */
-	private String crypto_address;
+	@JsonProperty("crypto_address")
+	private String cryptoAddress;
 }

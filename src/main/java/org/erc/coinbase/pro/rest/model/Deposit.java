@@ -18,6 +18,8 @@ package org.erc.coinbase.pro.rest.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -36,5 +38,6 @@ public class Deposit {
 	private String currency;
 	
 	/** The payout at. */
-	private String payout_at;
+	@JsonProperty("payout_at")
+	private String payoutAt;
 }

@@ -38,7 +38,9 @@ public class Currency {
 	@JsonProperty("min_size")
 	private BigDecimal minSize;
 	
+	/** Status */
 	private String status;
 	
+	/** Message */
 	private String message;
 }

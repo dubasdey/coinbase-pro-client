@@ -19,6 +19,7 @@ package org.erc.coinbase.pro.rest.model;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
@@ -40,14 +41,21 @@ public abstract class OrderRequest {
 	private OrderSide side;
 	
 	/** The product id. */
-	private String product_id;
+	@JsonProperty("product_id")
+	private String productId;
 	
-	private String client_oid;
+	/** The client oid. */
+	@JsonProperty("client_oid")
+	private String clientId;
 	
+	/** The stp. */
 	private String stp;
 	
+	/** The stop. */
 	private String stop;
 		
-	private BigDecimal stop_price;
+	/** The stop price. */
+	@JsonProperty("stop_price")
+	private BigDecimal stopPrice;
 	
 }
