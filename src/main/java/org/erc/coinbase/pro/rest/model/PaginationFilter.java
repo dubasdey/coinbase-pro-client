@@ -25,10 +25,10 @@ import lombok.Data;
 public abstract class PaginationFilter {
 
 	/** The before. */
-	private String before;
+	private Integer before;
 	
 	/** The after. */
-	private String after;
+	private Integer after;
 	
 	/** The limit. */
 	private int limit;

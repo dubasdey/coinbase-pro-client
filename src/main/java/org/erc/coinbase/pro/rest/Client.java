@@ -49,21 +49,46 @@ public class Client {
     }
 	
     /**
-	 * Sets the proxy (if required)
+	 * Sets the proxy (if required).
 	 *
-	 * @param proxy the new proxy
+	 * @param proxy
+	 *            the new proxy
 	 */
     public void setProxy(ProxyConfig proxy) {
     	http.setProxyConfig(proxy);
     }
     
     /**
-	 * Gets the current proxy configuration 
+	 * Gets the current proxy configuration .
 	 *
 	 * @return the proxy (or null if not configured)
 	 */
     public ProxyConfig getProxy() {
     	return http.getProxyConfig();
+    }
+    
+    /**
+	 * Inits the parameters.
+	 *
+	 * @param filter
+	 *            the filter
+	 * @return the map
+	 */
+    private Map<String,Object> initParameters(PaginationFilter filter){
+    	Map<String,Object> params = new HashMap<>();
+    	if(filter!=null) {
+			if(filter.getBefore()!=null) {
+				params.put("before", filter.getBefore());
+			}
+			if(filter.getAfter()!=null) {
+				params.put("after", filter.getAfter());
+			}
+			
+	 		if(filter.getLimit()>0) {
+				params.put("limit", filter.getLimit());
+			}
+    	}
+    	return params;
     }
     
     /**
@@ -75,14 +100,12 @@ public class Client {
 	 */
     public List<Account> getAccounts(AccountFilter filter) throws CoinbaseException {
     	List<Account> result = new ArrayList<>();
-    	if (filter == null) {
-    		result = http.get("/accounts", new TypeReference<List<Account>>() {},null, true);
-    	} else if (filter.getId() !=null ) {
+    	if (filter!=null && filter.getId() !=null ) {
     		Account acc = http.get(String.format("/account/%s",filter.getId()), new TypeReference<Account>() {},null, true);
     		result.add(acc);
     	} else {
-    		//TODO Pagination
-    		//result = http.get("/accounts", new TypeReference<List<Account>>() {}, true);
+    		Map<String,Object> params = initParameters(filter);
+    		result = http.get("/accounts", new TypeReference<List<Account>>() {},params, true);
     	}
     	return result;
     }
@@ -339,19 +362,21 @@ public class Client {
     } 
     
     /**
-	 * Cancel all order.
-	 *	With best effort, cancel all open orders. The response is a list of ids of the canceled orders.
+	 * Cancel all order. With best effort, cancel all open orders. The response is a
+	 * list of ids of the canceled orders.
+	 * 
+	 * HTTP Request DELETE /orders
+	 * 
+	 * API Key Permissions This endpoint requires the “trade” permission.
+	 * 
+	 * Query Parameters Param Default Description product_id [optional] Only cancel
+	 * orders open for a specific product
 	 *
-	 *	HTTP Request
-	 *		DELETE /orders
-	 *
-	 *	API Key Permissions
-	 *		This endpoint requires the “trade” permission.
-	 *	
-	 *	Query Parameters
-	 *		Param 			Default 	Description
-	 *		product_id 		[optional] 	Only cancel orders open for a specific product
-	 * @throws CoinbaseException the coinbase exception
+	 * @param productId
+	 *            the product id
+	 * @return the list
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public List<String> cancelAllOrders(String productId) throws CoinbaseException {
     	Map<String,Object> filter = new HashMap<>();
@@ -363,41 +388,43 @@ public class Client {
     /**
 	 * Gets the orders.
 	 * 
-	 * List your current open orders. Only open or un-settled orders are returned. As soon as an order is 
-	 * no longer open and settled, it will no longer appear in the default request.
+	 * List your current open orders. Only open or un-settled orders are returned.
+	 * As soon as an order is no longer open and settled, it will no longer appear
+	 * in the default request.
 	 * 
-	 * 	HTTP REQUEST
-	 * 		GET /orders
+	 * HTTP REQUEST GET /orders
 	 * 
-	 * 	API Key Permissions
-	 * 		This endpoint requires either the “view” or “trade” permission.
+	 * API Key Permissions This endpoint requires either the “view” or “trade”
+	 * permission.
 	 * 
-	 * 	Query Parameters
-	 * 		Param 		Default 					Description
-	 * 		status 		[open, pending, active] 	Limit list of orders to these statuses. Passing all returns orders of all statuses.
-	 * 		product_id 	[optional] 					Only list orders for a specific product
+	 * Query Parameters Param Default Description status [open, pending, active]
+	 * Limit list of orders to these statuses. Passing all returns orders of all
+	 * statuses. product_id [optional] Only list orders for a specific product
 	 * 
-	 * 	To specify multiple statuses, use the status query argument multiple times: /orders?status=done&status=pending.
-	 * 	This request is paginated.
-	 * 	
-	 * 	Order status and settlement
-	 * 	Orders which are no longer resting on the order book, will be marked with the done status. 
-	 * 	There is a small window between an order being done and settled. An order is settled when all of the 
-	 * 	fills have settled and the remaining holds (if any) have been removed.
+	 * To specify multiple statuses, use the status query argument multiple times:
+	 * /orders?status=done&status=pending. This request is paginated.
 	 * 
-	 * 	Polling
-	 * 	For high-volume trading it is strongly recommended that you maintain your own list of open orders and 
-	 * 	use one of the streaming market data feeds to keep it updated. You should poll the open orders endpoint 
-	 * 	once when you start trading to obtain the current state of any open orders.
+	 * Order status and settlement Orders which are no longer resting on the order
+	 * book, will be marked with the done status. There is a small window between an
+	 * order being done and settled. An order is settled when all of the fills have
+	 * settled and the remaining holds (if any) have been removed.
 	 * 
-	 * 	executed_value is the cumulative match size * price and is only present for orders 
-	 * 	placed after 2016-05-20.
+	 * Polling For high-volume trading it is strongly recommended that you maintain
+	 * your own list of open orders and use one of the streaming market data feeds
+	 * to keep it updated. You should poll the open orders endpoint once when you
+	 * start trading to obtain the current state of any open orders.
 	 * 
-	 * 	Open orders may change state between the request and the response depending on market conditions.
+	 * executed_value is the cumulative match size * price and is only present for
+	 * orders placed after 2016-05-20.
+	 * 
+	 * Open orders may change state between the request and the response depending
+	 * on market conditions.
 	 *
-	 * @param filter the filter
+	 * @param orderFilter
+	 *            the order filter
 	 * @return the orders
-	 * @throws CoinbaseException the coinbase exception
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public List<Order> getOrders(OrderFilter orderFilter) throws CoinbaseException {
     	Map<String,Object> filter = new HashMap<>();
@@ -432,55 +459,54 @@ public class Client {
     }
     
     /**
-	 * Gets the fills.
-	 *	Get a list of recent fills.
+	 * Gets the fills. Get a list of recent fills.
+	 * 
+	 * HTTP request GET /fills
+	 * 
+	 * API Key Permissions This endpoint requires either the “view” or “trade”
+	 * permission.
+	 * 
+	 * Query Parameters You can request fills for specific orders or products using
+	 * query parameters. Param Default Description order_id all Limit list of fills
+	 * to this order_id product_id all Limit list of fills to this product_id
+	 * 
+	 * DEPRECATION NOTICE - Requests without either order_id or product_id will be
+	 * rejected
+	 * 
+	 * Settlement and Fees
+	 * 
+	 * Fees are recorded in two stages. Immediately after the matching engine
+	 * completes a match, the fill is inserted into our datastore. Once the fill is
+	 * recorded, a settlement process will settle the fill and credit both trading
+	 * counterparties.
+	 * 
+	 * The fee field indicates the fees charged for this individual fill.
+	 * 
+	 * Liquidity
+	 * 
+	 * The liquidity field indicates if the fill was the result of a liquidity
+	 * provider or liquidity taker. M indicates Maker and T indicates Taker.
+	 * 
+	 * Pagination Fills are returned sorted by descending trade_id from the largest
+	 * trade_id to the smallest trade_id. The CB-BEFORE header will have this first
+	 * trade id so that future requests using the cb-before parameter will fetch
+	 * fills with a greater trade id (newer fills).
+	 * 
+	 * This request is paginated.
 	 *
-	 *	HTTP request
-	 *		GET /fills
-	 *
-	 *	API Key Permissions
-	 *		This endpoint requires either the “view” or “trade” permission.
-	 *
-	 *	Query Parameters
-	 *		You can request fills for specific orders or products using query parameters.
-	 *		Param 		Default 	Description
-	 *		order_id 		all 	Limit list of fills to this order_id
-	 *		product_id 		all 	Limit list of fills to this product_id
-	 *
-	 *	DEPRECATION NOTICE - Requests without either order_id or product_id will be rejected
-	 *
-	 *	Settlement and Fees
-	 *
-	 *	Fees are recorded in two stages. Immediately after the matching engine completes a match, 
-	 *	the fill is inserted into our datastore. Once the fill is recorded, a settlement process will 
-	 *	settle the fill and credit both trading counterparties.
-	 *
-	 *	The fee field indicates the fees charged for this individual fill.
-	 *
-	 *	Liquidity
-	 *
-	 *	The liquidity field indicates if the fill was the result of a liquidity provider or liquidity taker. 
-	 *	M indicates Maker and T indicates Taker.
-	 *
-	 *	Pagination
-	 *	Fills are returned sorted by descending trade_id from the largest trade_id to the 
-	 *	smallest trade_id. The CB-BEFORE header will have this first trade id so that future requests using 
-	 *	the cb-before parameter will fetch fills with a greater trade id (newer fills).
-	 *
-	 *	This request is paginated.
-	 *
-	 * @param filter the filter
+	 * @param fillFilter
+	 *            the fill filter
 	 * @return the fills
-	 * @throws CoinbaseException the coinbase exception
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public List<Fill> getFills(FillFilter fillFilter) throws CoinbaseException {
     	if(fillFilter == null || (fillFilter.getOrderId() == null && fillFilter.getProductId() == null)) {
     		throw new RequiredParameterException("order_id or product_id");
     	}    	
-    	Map<String,Object> filter = new HashMap<>();
+    	Map<String,Object> filter = initParameters(fillFilter);
     	putIfAbsent(filter, "order_id", fillFilter.getOrderId());
     	putIfAbsent(filter, "product_id", fillFilter.getProductId());
-    	//TODO Pagination
     	return http.get("/fills", new TypeReference<List<Fill>>() {},filter, true);
     }
     
@@ -540,55 +566,43 @@ public class Client {
 	 * 
 	 * Payment method
 	 * 
-	 * Withdraw funds to a payment method. See the Payment Methods section for retrieving your payment methods.
+	 * Withdraw funds to a payment method. See the Payment Methods section for
+	 * retrieving your payment methods.
 	 * 
-	 * 	HTTP request
-	 * 		POST /withdrawals/payment-method
+	 * HTTP request POST /withdrawals/payment-method
 	 * 
-	 * 	API Key Permissions
-	 * 		This endpoint requires the “transfer” permission.
+	 * API Key Permissions This endpoint requires the “transfer” permission.
 	 * 
-	 * 	Parameters
-	 * 		Param 				Description
-	 * 		amount 				The amount to withdraw
-	 * 		currency 			The type of currency
-	 * 		payment_method_id 	ID of the payment method
+	 * Parameters Param Description amount The amount to withdraw currency The type
+	 * of currency payment_method_id ID of the payment method
+	 * 
+	 * Coinbase Withdraw funds to a coinbase account. You can move funds between
+	 * your Coinbase accounts and your Coinbase Pro trading accounts within your
+	 * daily limits. Moving funds between Coinbase and Coinbase Pro is instant and
+	 * free. See the Coinbase Accounts section for retrieving your Coinbase
+	 * accounts.
+	 * 
+	 * HTTP request POST /withdrawals/coinbase-account
+	 * 
+	 * API Key Permissions This endpoint requires the “transfer” permission.
+	 * 
+	 * Parameters Param Description amount The amount to withdraw currency The type
+	 * of currency coinbase_account_id ID of the coinbase account
+	 * 
+	 * Crypto Withdraws funds to a crypto address.
+	 * 
+	 * HTTP request POST /withdrawals/crypto
+	 * 
+	 * API Key Permissions This endpoint requires the “transfer” permission.
+	 * 
+	 * Parameters Param Description amount The amount to withdraw currency The type
+	 * of currency crypto_address A crypto address of the recipient
 	 *
-	 * Coinbase
-	 * Withdraw funds to a coinbase account. You can move funds between your Coinbase accounts and your 
-	 * Coinbase Pro trading accounts within your daily limits. Moving funds between Coinbase and Coinbase 
-	 * Pro is instant and free. See the Coinbase Accounts section for retrieving your Coinbase accounts.
-	 * 
-	 * 	HTTP request
-	 * 		POST /withdrawals/coinbase-account
-	 * 
-	 * 	API Key Permissions
-	 * 		This endpoint requires the “transfer” permission.
-	 * 
-	 * 	Parameters
-	 * 		Param 					Description
-	 * 		amount 					The amount to withdraw
-	 * 		currency 				The type of currency
-	 * 		coinbase_account_id 	ID of the coinbase account
-	 *
-	 * Crypto
-	 * 	Withdraws funds to a crypto address.
-	 * 
-	 * 	HTTP request
-	 * 		POST /withdrawals/crypto
-	 * 
-	 * 	API Key Permissions
-	 * 		This endpoint requires the “transfer” permission.
-	 * 
-	 * 	Parameters
-	 * 		Param 				Description
-	 * 		amount 				The amount to withdraw
-	 * 		currency 			The type of currency
-	 * 		crypto_address 		A crypto address of the recipient
-	 * 
-	 * @param deposit the deposit
+	 * @param withdrawal
+	 *            the withdrawal
 	 * @return the withdrawal
-	 * @throws CoinbaseException the coinbase exception
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public Withdrawal withdrawal(WithdrawalRequest withdrawal) throws CoinbaseException {
     	if (withdrawal instanceof WithdrawalRequestCoinbase) {
@@ -722,20 +736,22 @@ public class Client {
     }
     
     /**
-	 * Get a list of available currency pairs for trading.
-	 * 		GET /products
-	 * Details
-	 * 		The base_min_size and base_max_size fields define the min and max order size. 
-	 * 		The quote_increment field specifies the min order price as well as the price increment.
+	 * Get a list of available currency pairs for trading. GET /products Details The
+	 * base_min_size and base_max_size fields define the min and max order size. The
+	 * quote_increment field specifies the min order price as well as the price
+	 * increment.
 	 * 
-	 * 		The order price must be a multiple of this increment (i.e. if the increment is 0.01, order 
-	 * 		prices of 0.001 or 0.021 would be rejected).
+	 * The order price must be a multiple of this increment (i.e. if the increment
+	 * is 0.01, order prices of 0.001 or 0.021 would be rejected).
 	 * 
-	 * 		Product ID will not change once assigned to a product but the min/max/quote sizes can 
-	 * 		be updated in the future.
+	 * Product ID will not change once assigned to a product but the min/max/quote
+	 * sizes can be updated in the future.
 	 *
+	 * @param productFilter
+	 *            the product filter
 	 * @return the products
-	 * @throws CoinbaseException the coinbase exception
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public List<Product> getProducts(ProductsFilter productFilter) throws CoinbaseException {
     	Map<String,Object> filter = new HashMap<>();
@@ -816,26 +832,27 @@ public class Client {
     /**
 	 * List the latest trades for a product.
 	 * 
-	 * HTTP request
-	 * 		GET /products/<product-id>/trades
+	 * HTTP request GET /products/<product-id>/trades
 	 * 
 	 * This request is paginated.
 	 * 
-	 * Side
-	 * 	The trade side indicates the maker order side. The maker order is the order that was open on the order book. 
-	 * 	buy side indicates a down-tick because the maker was a buy order and their order was removed. 
-	 * 	Conversely, sell side indicates an up-tick.
+	 * Side The trade side indicates the maker order side. The maker order is the
+	 * order that was open on the order book. buy side indicates a down-tick because
+	 * the maker was a buy order and their order was removed. Conversely, sell side
+	 * indicates an up-tick.
 	 *
-	 * @param productId the product id
+	 * @param productFilter
+	 *            the product filter
 	 * @return the product trades
-	 * @throws CoinbaseException the coinbase exception
+	 * @throws CoinbaseException
+	 *             the coinbase exception
 	 */
     public List<Trade> getProductTrades(ProductTradesFilter productFilter) throws CoinbaseException{
     	if(productFilter == null || productFilter.getProductId() == null || productFilter.getProductId().isEmpty()) {
     		throw new RequiredParameterException("productId");
     	}    	
-    	//TODO Pagination
-    	return http.get(String.format("/products/%s/trades",productFilter.getProductId()), new TypeReference<List<Trade>>() {},null, false);
+    	Map<String,Object> params = initParameters(productFilter);
+    	return http.get(String.format("/products/%s/trades",productFilter.getProductId()), new TypeReference<List<Trade>>() {},params, false);
     } 
     
     /**
@@ -957,11 +974,19 @@ public class Client {
     } 
     
     /**
-     * Put in map if not exists
-     * @param map	Map
-     * @param k		Key
-     * @param v		Value
-     */
+	 * Put in map if not exists.
+	 *
+	 * @param <K>
+	 *            the key type
+	 * @param <V>
+	 *            the value type
+	 * @param map
+	 *            Map
+	 * @param k
+	 *            Key
+	 * @param v
+	 *            Value
+	 */
     private <K,V> void putIfAbsent(Map<K,V> map,K k,V v) {
     	if(map !=null && k!=null) {
     		map.putIfAbsent(k, v);

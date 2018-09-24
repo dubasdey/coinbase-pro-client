@@ -1,6 +1,6 @@
 package org.erc.coinbase.pro.rest;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.erc.coinbase.pro.rest.exceptions.CoinbaseException;
-import org.erc.coinbase.pro.rest.model.Currency;
+import org.erc.coinbase.pro.rest.exceptions.*;
+import org.erc.coinbase.pro.rest.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,4 +56,26 @@ public class ClientTest {
 	}
 	
 	
+	@Test
+	public void getAccounts1() throws CoinbaseException {
+		List<Account> account = client.getAccounts(null);
+		assertNotNull(account);
+		assertFalse(account.isEmpty());
+		String accId = account.get(0).getId();
+		Account account2 = client.getAccount(accId);
+		assertNotNull(account2);
+	}
+	
+	@Test
+	public void getAccounts2() throws CoinbaseException {
+		AccountFilter filter = new AccountFilter();
+		List<Account> account = client.getAccounts(filter);
+		assertNotNull(account);
+		assertFalse(account.isEmpty());
+		
+		String accId = account.get(0).getId();
+		
+		Account account2 = client.getAccount(accId);
+		assertNotNull(account2);
+	}
 }
