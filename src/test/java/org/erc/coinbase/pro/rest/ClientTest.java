@@ -69,6 +69,7 @@ public class ClientTest {
 	@Test
 	public void getAccounts2() throws CoinbaseException {
 		AccountFilter filter = new AccountFilter();
+		filter.setLimit(2);
 		List<Account> account = client.getAccounts(filter);
 		assertNotNull(account);
 		assertFalse(account.isEmpty());
@@ -78,4 +79,38 @@ public class ClientTest {
 		Account account2 = client.getAccount(accId);
 		assertNotNull(account2);
 	}
+	
+	@Test
+	public void getCoinbaseAccounts() throws CoinbaseException {
+		List<CoinbaseAccount> items = client.getCoinbaseAccounts();
+		assertNotNull(items);
+		
+	}
+	
+	@Test
+	public void getFills() throws CoinbaseException {
+		FillFilter filter = new FillFilter();
+		filter.setProductId("BTC-USD");
+		List<Fill> items = client.getFills(filter);
+		assertNotNull(items);
+	}	
+	
+	@Test
+	public void getProducts() throws CoinbaseException {
+		List<Product> items = client.getProducts(null);
+		assertNotNull(items);
+	}
+	
+	@Test
+	public void getTrailingVolume() throws CoinbaseException {
+		List<TrailingVolume> items = client.getTrailingVolume();
+		assertNotNull(items);
+	}	
+	
+	@Test
+	public void getPaymentMethods() throws CoinbaseException {
+		List<Payment> items = client.getPaymentMethods();
+		assertNotNull(items);
+	}	
+	
 }

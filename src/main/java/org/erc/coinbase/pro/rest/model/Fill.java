@@ -62,4 +62,17 @@ public class Fill {
 	
 	/** The side. */
 	private String side;
+	
+	/** The user id. */
+	@JsonProperty("user_id")
+	private String userId;
+
+	/** The profile id. */
+	@JsonProperty("profile_id")
+	private String profileId;
+	
+	/** The usd volume. */
+	@JsonProperty("usd_volume")
+	private String usdVolume;
+
 }

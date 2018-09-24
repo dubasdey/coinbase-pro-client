@@ -134,11 +134,14 @@ final class HTTPRest {
 	 * @return the string
 	 */
 	private String parameterFormat(Object param) {
-		if(param instanceof Date) {
-			 DateTimeFormatter printer = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.S");
-			 return printer.toFormat().format(param);
+		if(param!=null) {
+			if(param instanceof Date) {
+				 DateTimeFormatter printer = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.S");
+				 return printer.toFormat().format(param);
+			}
+			return param.toString();
 		}
-		return param.toString();
+		return null;
 	}
 	
 	/**
@@ -269,10 +272,11 @@ final class HTTPRest {
 		try {
 			log.debug(String.format("> Request %s",resourcePath));
 			init();
-			HttpGet request = new HttpGet(baseUrl + buildPath(resourcePath,params));
+			String path = buildPath(resourcePath,params);
+			HttpGet request = new HttpGet(baseUrl + path);
 			injectHeaders(request);
 			if(secured) {				
-				injectSecurity(request,resourcePath,"GET","");
+				injectSecurity(request,path,"GET","");
 			}
 			return execute(request,type);
 		} catch (Exception e) {

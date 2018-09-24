@@ -50,5 +50,41 @@ public class Product {
 	/** The quote increment. */
 	@JsonProperty("quote_increment")
 	private BigDecimal quoteIncrement;
+	
+	/** The display name. */
+	@JsonProperty("display_name")
+	private String displayName;
+	
+	/** The status. */
+	@JsonProperty("status")
+	private String status;
+	
+	/** The margin enabled. */
+	@JsonProperty("margin_enabled")
+	private boolean marginEnabled;
+	
+	/** The status message. */
+	@JsonProperty("status_message")
+	private boolean statusMessage;
+
+	/** The min market funds. */
+	@JsonProperty("min_market_funds")
+	private BigDecimal minMarketFunds;
+	
+	/** The max market funds. */
+	@JsonProperty("max_market_funds")
+	private BigDecimal maxMarketFunds;	
+	
+	/** The post only. */
+	@JsonProperty("post_only")
+	private boolean postOnly;
+	
+	/** The limit only. */
+	@JsonProperty("limit_only")
+	private boolean limitOnly;	
+	
+	/** The cancel only. */
+	@JsonProperty("cancel_only")
+	private boolean cancelOnly;		
 
 }

@@ -757,9 +757,11 @@ public class Client {
 	 */
     public List<Product> getProducts(ProductsFilter productFilter) throws CoinbaseException {
     	Map<String,Object> filter = new HashMap<>();
-		putIfAbsent(filter, "base_min_size", productFilter.getMinSize());
-		putIfAbsent(filter, "base_max_size", productFilter.getMaxSize());
-		putIfAbsent(filter, "quote_increment", productFilter.getIncrement());
+    	if(productFilter!=null) {
+			putIfAbsent(filter, "base_min_size", productFilter.getMinSize());
+			putIfAbsent(filter, "base_max_size", productFilter.getMaxSize());
+			putIfAbsent(filter, "quote_increment", productFilter.getIncrement());
+    	}
     	return http.get("/products", new TypeReference<List<Product>>() {},filter, false);
     }
     

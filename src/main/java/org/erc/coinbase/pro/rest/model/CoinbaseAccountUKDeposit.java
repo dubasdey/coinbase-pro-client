@@ -16,17 +16,33 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new account filter.
+ * The Class CoinbaseAccountUKDeposit.
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class AccountFilter extends PaginationFilter{
-
-	/** The id. */
-	private String id;
+public class CoinbaseAccountUKDeposit {
+	
+	/** The sort code. */
+	@JsonProperty("sort_code")
+	private String sortCode;
+	
+	/** The account name. */
+	@JsonProperty("account_name")
+	private String accountName;
+	
+	/** The account number. */
+	@JsonProperty("account_number")
+	private String accountNumber;
+	
+	/** The bank name. */
+	@JsonProperty("bank_name")
+	private String bankName;
+	
+	/** The reference. */
+	private String reference;
 	
 }

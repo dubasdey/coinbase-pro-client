@@ -17,16 +17,16 @@
 package org.erc.coinbase.pro.rest.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new account filter.
+ * The Class PaymentFiatAccount.
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class AccountFilter extends PaginationFilter{
+public class PaymentFiatAccount {
 
 	/** The id. */
 	private String id;
 	
+	/** The resource. */
+	private String resource;
 }

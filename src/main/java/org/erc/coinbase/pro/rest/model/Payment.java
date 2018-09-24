@@ -16,6 +16,8 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -61,4 +63,37 @@ public class Payment {
 	
 	/** The limits. */
 	private PaymentLimits limits;
+	
+	/** The currency. */
+	private String currency;
+
+	/** The allow withdraw. */
+	@JsonProperty("created_at")
+	private Date createdAt;
+	
+	/** The allow withdraw. */
+	@JsonProperty("updated_at")
+	private Date updatedAt;	
+	
+	/** The allow withdraw. */
+	private String resource;	
+	
+	/** The allow withdraw. */
+	@JsonProperty("resource_path")
+	private String resourcePath;
+
+	/** The fiat account. */
+	@JsonProperty("fiat_account")
+	private PaymentFiatAccount fiatAccount;
+	
+	/** The verified. */
+	private boolean verified;
+	
+	/** The verification method. */
+	@JsonProperty("verification_method")
+	private String verificationMethod;
+	
+	/** The cdv status. */
+	@JsonProperty("cdv_status")
+	private String cdvStatus;
 }

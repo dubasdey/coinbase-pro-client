@@ -16,17 +16,43 @@
  */
 package org.erc.coinbase.pro.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new account filter.
+ * The Class CoinbaseAccountWireDepositSEPA.
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class AccountFilter extends PaginationFilter{
+public class CoinbaseAccountSEPADeposit {
 
-	/** The id. */
-	private String id;
+	/** The iban. */
+	private String iban;
 	
+	/** The swift. */
+	private String swift;
+	
+	/** The bank name. */
+	@JsonProperty("bank_name")
+	private String bankName;
+	
+	/** The bank address. */
+	@JsonProperty("bank_address")
+	private String bankAddress;
+	
+	/** The bank country name. */
+	@JsonProperty("bank_country_name")
+	private String bankCountryName;
+	
+	/** The account name. */
+	@JsonProperty("account_name")
+	private String accountName;
+	
+	/** The account address. */
+	@JsonProperty("account_address")
+	private String accountAddress;
+	
+	/** The reference. */
+	private String reference;
+
 }

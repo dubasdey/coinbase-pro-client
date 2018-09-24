@@ -40,6 +40,14 @@ public class CoinbaseAccount {
 	/** The currency. */
 	private String currency;
 	
+	/** The balance. */
+	@JsonProperty("hold_balance")
+	private BigDecimal holdBalance;
+	
+	/** The currency. */
+	@JsonProperty("hold_currency")
+	private String holdCurrency;
+	
 	/** The type. */
 	private String type;
 	
@@ -52,4 +60,12 @@ public class CoinbaseAccount {
 	/** The wire deposit information. */
 	@JsonProperty("wire_deposit_information")
 	private CoinbaseAccountWireDeposit wireDeposit;
+	
+	/** The sepa deposit information. */
+	@JsonProperty("sepa_deposit_information")
+	private CoinbaseAccountSEPADeposit sepaDeposit;
+	
+	@JsonProperty("uk_deposit_information")
+	private CoinbaseAccountUKDeposit ukDeposit;
+
 }
