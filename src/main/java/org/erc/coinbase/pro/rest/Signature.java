@@ -16,7 +16,6 @@
  */
 package org.erc.coinbase.pro.rest;
 
-import java.security.GeneralSecurityException;
 import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,37 +33,50 @@ import org.erc.coinbase.pro.rest.exceptions.SignatureException;
  */
 final class Signature {
 
-	/** The signature. */
-	private String signature;
+	/** The signature MAC Instance. */
+	private Mac sha256 = null;
 	
 	/**
 	 * Instantiates a new signature.
 	 *
-	 * @param secretKey   the secret key
-	 * @param requestPath the request path
-	 * @param method      the method
-	 * @param body        the body
-	 * @param timestamp   the timestamp
-	 * @throws SignatureException the signature exception
+	 * @param secretKey
+	 *            the secret key
+	 * @throws SignatureException
+	 *             the signature exception
 	 */
-	public Signature(String secretKey,String requestPath, String method, String body, String timestamp) throws SignatureException {
+	public Signature(String secretKey) throws SignatureException {
+		byte[] secretDecoded = Base64.getDecoder().decode(secretKey);
+		try {
+			sha256 = Mac.getInstance("HmacSHA256");
+			sha256.init(new SecretKeySpec(secretDecoded, sha256.getAlgorithm()));
+		} catch (Exception e) {
+			 throw new SignatureException("Cannot set up authentication headers.",e);
+		}
+		
+	}
+	
+	/**
+	 * Sign.
+	 *
+	 * @param requestPath
+	 *            the request path
+	 * @param method
+	 *            the method
+	 * @param body
+	 *            the body
+	 * @param timestamp
+	 *            the timestamp
+	 * @return the string
+	 * @throws SignatureException
+	 *             the signature exception
+	 */
+	public String sign(String requestPath, String method, String body, Long timestamp) throws SignatureException {
         try {
             String prehash = timestamp + method.toUpperCase() + requestPath + body;
-            byte[] secretDecoded = Base64.getDecoder().decode(secretKey);
-            Mac sha256 = Mac.getInstance("HmacSHA256");
-            SecretKeySpec keyspec = new SecretKeySpec(secretDecoded, sha256.getAlgorithm());
-            sha256.init(keyspec);
-            signature = Base64.getEncoder().encodeToString(sha256.doFinal(prehash.getBytes()));
-        } catch (GeneralSecurityException  e) {
+            return Base64.getEncoder().encodeToString(sha256.doFinal(prehash.getBytes()));
+        } catch (Exception  e) {
             throw new SignatureException("Cannot set up authentication headers.",e);
         }
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return signature;
-	}
+
 }

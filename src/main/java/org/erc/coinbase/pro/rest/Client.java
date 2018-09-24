@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.erc.coinbase.pro.rest.exceptions.CoinbaseException;
 import org.erc.coinbase.pro.rest.exceptions.RequiredParameterException;
+import org.erc.coinbase.pro.rest.exceptions.SignatureException;
 import org.erc.coinbase.pro.rest.model.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,8 +44,9 @@ public class Client {
 	 * @param secretKey  the secret key
 	 * @param passphrase the passphrase
 	 * @param baseUrl    the base url
+     * @throws SignatureException 
 	 */
-    public Client(String publicKey,String secretKey, String passphrase, String baseUrl) {
+    public Client(String publicKey,String secretKey, String passphrase, String baseUrl) throws SignatureException {
 		http = new HTTPRest(baseUrl,publicKey,secretKey,passphrase);
     }
 	

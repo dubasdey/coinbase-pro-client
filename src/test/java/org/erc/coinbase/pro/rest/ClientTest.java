@@ -18,7 +18,7 @@ public class ClientTest {
 	private Client client;
 	
 	@Before
-	public void init() throws IOException {
+	public void init() throws IOException, SignatureException {
 		
 		Properties properties = new Properties();
 		InputStream stream = Client.class.getResourceAsStream("/test.properties");

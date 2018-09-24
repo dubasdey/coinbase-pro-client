@@ -41,6 +41,4 @@ public abstract class PaginationFilter {
 	public boolean hasPagination() {
 		return before !=null || after != null || limit >0;
 	}
-
-	
 }

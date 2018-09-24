@@ -72,9 +72,7 @@ final class HTTPRest {
 	/** The base url. */
 	private String baseUrl;
 	
-	/** The secret key. */
-	private String secretKey;
-	
+
 	/** The public key. */
 	private String publicKey;
 	
@@ -84,10 +82,10 @@ final class HTTPRest {
 	/** The httpclient. */
 	private  CloseableHttpClient httpclient;
 	
+	private Signature signature;
+	
 	/** Sets the proxy config */
 	@Getter
-	
-	/** Sets the sets the proxy config */
 	@Setter
 	private ProxyConfig proxyConfig;
 	
@@ -98,13 +96,14 @@ final class HTTPRest {
 	 * @param secretKey  the secret key
 	 * @param publicKey  the public key
 	 * @param passphrase the passphrase
+	 * @throws SignatureException 
 	 */
-	public HTTPRest(String baseUrl,String secretKey,String publicKey,String passphrase) {
+	public HTTPRest(String baseUrl,String publicKey,String secretKey,String passphrase) throws SignatureException {
 		mapper = new ObjectMapper();
 		this.baseUrl = baseUrl;
-		this.secretKey = secretKey;
 		this.publicKey = publicKey;
 		this.passphrase = passphrase;
+		this.signature= new Signature(secretKey);
 	}
 	
 	/**
@@ -163,11 +162,10 @@ final class HTTPRest {
 	 * @throws SignatureException the signature exception
 	 */
 	private void injectSecurity(HttpUriRequest request ,String resourcePath,String method,String body) throws SignatureException {
-		String timestamp = Instant.now().getEpochSecond() + "";
-		Signature signature = new Signature(secretKey,resourcePath,method,body,timestamp);
+		Long timestamp = Instant.now().getEpochSecond();
 		request.addHeader("CB-ACCESS-KEY", publicKey);
-		request.addHeader("CB-ACCESS-SIGN", signature.toString());
-		request.addHeader("CB-ACCESS-TIMESTAMP", timestamp);
+		request.addHeader("CB-ACCESS-SIGN", signature.sign(resourcePath,method,body,timestamp));
+		request.addHeader("CB-ACCESS-TIMESTAMP", timestamp.toString());
 		request.addHeader("CB-ACCESS-PASSPHRASE", passphrase);		
 	}
 	
