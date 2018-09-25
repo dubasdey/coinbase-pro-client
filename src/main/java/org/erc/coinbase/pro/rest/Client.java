@@ -44,7 +44,7 @@ public class Client {
 	 * @param secretKey  the secret key
 	 * @param passphrase the passphrase
 	 * @param baseUrl    the base url
-     * @throws SignatureException 
+     * @throws SignatureException Signature Exception
 	 */
     public Client(String publicKey,String secretKey, String passphrase, String baseUrl) throws SignatureException {
 		http = new HTTPRest(baseUrl,publicKey,secretKey,passphrase);
@@ -338,10 +338,10 @@ public class Client {
 	 * Cancel a previously placed order.
 	 * 
 	 * 	If the order had no matches during its lifetime its record may be purged. 
-	 * 	This means the order details will not be available with GET /orders/<order-id>.
+	 * 	This means the order details will not be available with GET /orders/[order-id].
 	 * 
 	 * 	HTTP Request
-	 * 		DELETE /orders/<order-id>
+	 * 		DELETE /orders/[order-id]
 	 * 
 	 * 	API Key Permissions
 	 * 
@@ -403,8 +403,9 @@ public class Client {
 	 * Limit list of orders to these statuses. Passing all returns orders of all
 	 * statuses. product_id [optional] Only list orders for a specific product
 	 * 
-	 * To specify multiple statuses, use the status query argument multiple times:
-	 * /orders?status=done&status=pending. This request is paginated.
+	 * To specify multiple statuses, use the status query argument multiple times
+	 * 
+	 * This request is paginated.
 	 * 
 	 * Order status and settlement Orders which are no longer resting on the order
 	 * book, will be marked with the done status. There is a small window between an
@@ -441,7 +442,7 @@ public class Client {
 	 * Gets the orders.
 	 *	Get a single order by order id.
 	 *	HTTP Request
-	 *		GET /orders/<order-id>
+	 *		GET /orders/[order-id]
 	 *
 	 *	API Key Permissions
 	 *		This endpoint requires either the “view” or “trade” permission.
@@ -768,7 +769,7 @@ public class Client {
     /**
 	 * Get a list of open orders for a product. The amount of detail shown can be customized with the level parameter.
 	 * 	HTTP Request
-	 * 		GET /products/<product-id>/book
+	 * 		GET /products/[product-id]/book
 	 * 	Details
 	 * 		By default, only the inside (i.e. best) bid and ask are returned. This is equivalent to a book depth of 1 level. 
 	 * 		If you would like to see a larger order book, specify the level query parameter.
@@ -817,7 +818,7 @@ public class Client {
 	 * Snapshot information about the last trade (tick), best bid/ask and 24h volume.
 	 * 
 	 * 	HTTP request
-	 * 		GET /products/<product-id>/ticker
+	 * 		GET /products/[product-id]/ticker
 	 * 
 	 * 	Real-time updates
 	 * 		Polling is discouraged in favor of connecting via the websocket stream and listening for match messages.
@@ -836,7 +837,7 @@ public class Client {
     /**
 	 * List the latest trades for a product.
 	 * 
-	 * HTTP request GET /products/<product-id>/trades
+	 * HTTP request GET /products/[product-id]/trades
 	 * 
 	 * This request is paginated.
 	 * 
@@ -868,7 +869,7 @@ public class Client {
 	 * endpoints along with the websocket feed.
 	 * 
 	 * 	HTTP request
-	 * 		GET /products/<product-id>/candles
+	 * 		GET /products/[product-id]/candles
 	 * 
 	 * 	Parameters
 	 * 		Param 	Description
@@ -926,7 +927,7 @@ public class Client {
     /**
 	 * Get 24 hr stats for the product. volume is in base currency units. open, high, low are in quote currency units.
 	 * 	HTTP request
-	 * 		GET /products/<product-id>/stats
+	 * 		GET /products/[product-id]/stats
 	 *
 	 * @param productId the product id
 	 * @return the product stats

@@ -9,7 +9,8 @@ script: mvn clean package -DskipTests=true
 deploy:
   provider: releases
   api_key: $GITAPI
-  file: "target/coinbase-pro-client.jar"
+  file_glob: true
+  file: "target/*.jar"
   skip_cleanup: true
   on:
     tags: true
