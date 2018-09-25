@@ -20,10 +20,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Instantiates a new account filter.
+ * Instantiates a new account hold filter.
  */
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class AccountFilter extends PaginationFilter {
+public class AccountHoldFilter extends PaginationFilter {
 
+	/** The account id. */
+	private String accountId;
 }

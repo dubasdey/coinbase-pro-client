@@ -16,7 +16,6 @@
  */
 package org.erc.coinbase.pro.rest;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -94,60 +93,147 @@ public class Client {
     }
     
     /**
-	 * Accounts.
-	 *
+	 * <p>
+	 * 	<b>Get a list of trading accounts</b><br>
+	 * 	Your trading accounts are separate from your Coinbase accounts. 
+	 * 	See the Deposits section for documentation on how to deposit funds to begin trading.
+	 * </p>
+	 * <p>
+	 * <b>HTTP Request</b><br>
+	 * 		<code>GET /accounts</code>
+	 * </p>
+	 * <p>
+	 * <b>API Key Permissions</b><br>
+	 * 		This endpoint requires either the “view” or “trade” permission.
+	 * </p>
+	 * <p>
+	 * 	<b>Account Fields</b><br>
+	 * 	<br>
+	 * 	Field 		Description<br>
+	 * 	id 			Account ID<br>
+	 * 	currency 	the currency of the account<br>
+	 * 	balance 	total funds in the account<br>
+	 * 	holds 		funds on hold (not available for use)<br>
+	 * 	available 	funds available to withdraw or trade<br>
+	 * </p>
+	 * <p>
+	 * <b>Funds on Hold</b><br>
+	 * 	When you place an order, the funds for the order are placed on hold. 
+	 * 	They cannot be used for other orders or withdrawn. Funds will remain on hold until the order is 
+	 * 	filled or canceled.
+	 *</p>
 	 * @param filter the filter
 	 * @return the list
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public List<Account> getAccounts(AccountFilter filter) throws CoinbaseException {
-    	List<Account> result = new ArrayList<>();
-    	if (filter!=null && filter.getId() !=null ) {
-    		Account acc = http.get(String.format("/account/%s",filter.getId()), new TypeReference<Account>() {},null, true);
-    		result.add(acc);
-    	} else {
-    		Map<String,Object> params = initParameters(filter);
-    		result = http.get("/accounts", new TypeReference<List<Account>>() {},params, true);
-    	}
-    	return result;
+    	Map<String,Object> params = initParameters(filter);
+    	return http.get("/accounts", new TypeReference<List<Account>>() {},params, true);
     }
     
     /**
-	 * Accounts.
+	 * Get an Account
 	 *
 	 * @param id the id
 	 * @return account
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Account getAccount(String id) throws CoinbaseException {
+    	if( id == null || id.isEmpty()) {
+    		throw new RequiredParameterException("accountId");
+    	}        	
     	return http.get(String.format("/account/%s",id), new TypeReference<Account>() {},null, true);	
     }
     
     
     /**
-	 * Gets the account history.
+     * <p>
+	 *	<b>List account activity.</b><br> 
 	 *
-	 * @param id the id
+	 *	Account activity either increases or decreases your account balance. 
+	 *	Items are paginated and sorted latest first. See the Pagination section for retrieving 
+	 *	additional entries after the first page.
+	 *	</p>
+	 *	<p>
+	 *		<b>HTTP request</b><br>
+	 *		<code>GET /accounts/[account-id]/ledger</code>
+	 *	</p>
+	 *	<p>
+	 *	API Key Permissions
+	 *		This endpoint requires either the “view” or “trade” permission.
+	 *	</p>
+	 *	<p>
+	 *	<b>Entry Types</b><br>
+	 *
+	 *		Entry type indicates the reason for the account change.<br>
+	 *	
+	 *		Type 		Description<br>
+	 *		transfer 	Funds moved to/from Coinbase to Coinbase Pro<br>
+	 *		match 		Funds moved as a result of a trade<br>
+	 *		fee 		Fee as a result of a trade<br>
+	 *		rebate 		Fee rebate as per our fee schedule<br>
+	 *	</p>
+	 *	<p>
+	 *	<b>Details</b><br>
+	 *	If an entry is the result of a trade (match, fee), the details field will contain additional 
+	 *	information about the trade.
+	 *
+	 *	This request is paginated
+	 * </p>
+	 * @param filter the filter
 	 * @return the account history
 	 * @throws CoinbaseException the coinbase exception
 	 */
-    public List<AccountHistory> getAccountHistory(String id) throws CoinbaseException {
-    	return http.get(String.format("/account/%s/ledger",id), new TypeReference<List<AccountHistory>>() {},null, true);
+    public List<AccountHistory> getAccountHistory(AccountHistoryFilter filter) throws CoinbaseException {
+    	if( filter == null || filter.getAccountId() == null || filter.getAccountId().isEmpty()) {
+    		throw new RequiredParameterException("accountId");
+    	}
+    	Map<String,Object> params = initParameters(filter);
+    	return http.get(String.format("/account/%s/ledger",filter.getAccountId()), new TypeReference<List<AccountHistory>>() {},params, true);
     }
     
     /**
-	 * Gets the account holds.
-	 *
-	 * @param id the id
+     * <p>
+	 * <b>Gets the account holds.</b>
+	 * 
+	 *	Holds are placed on an account for any active orders or pending withdraw requests. As an order 
+	 *	is filled, the hold amount is updated. If an order is canceled, any remaining hold is removed. 
+	 *	For a withdraw, once it is completed, the hold is removed.
+	 *</p>
+	 *<p>
+	 *	<b>HTTP Request</b><br>
+	 *		<code>GET /accounts/[account_id]/holds</code>
+	 *</p>
+	 *<p>
+	 *	<b>API Key Permissions</b><br>
+	 *		This endpoint requires either the “view” or “trade” permission.
+	 *</p>
+	 *<p>
+	 *	This request is paginated
+	 *</p>
+	 *<p>
+	 *	<b>Type</b><br>
+	 *		The type of the hold will indicate why the hold exists. The hold type is order for holds 
+	 *		related to open orders and transfer for holds related to a withdraw.
+	 *	<br>
+	 *	<b>Ref</b><br>
+	 *		The ref field contains the id of the order or transfer which created the hold.
+	 *</p>
+	 * @param filter the filter
 	 * @return the account holds
 	 * @throws CoinbaseException the coinbase exception
 	 */
-    public List<Hold> getAccountHolds(String id) throws CoinbaseException {
-    	return http.get(String.format("/account/%s/holds",id), new TypeReference<List<Hold>>() {},null, true);
+    public List<Hold> getAccountHolds(AccountHoldFilter filter) throws CoinbaseException {
+    	if( filter == null || filter.getAccountId() == null || filter.getAccountId().isEmpty()) {
+    		throw new RequiredParameterException("accountId");
+    	}      	
+    	Map<String,Object> params = initParameters(filter);
+    	return http.get(String.format("/account/%s/holds",filter.getAccountId()), new TypeReference<List<Hold>>() {},params, true);
     }
  
     /**
 	 * You can place two types of orders: limit and market. 
+	 * 
 	 * Orders can only be placed if your account has sufficient funds. 
 	 * Once an order is placed, your account funds will be put on hold for the duration of the order. 
 	 * How much and which funds are put on hold depends on the order type and parameters specified. 
@@ -330,7 +416,7 @@ public class Client {
 	 * @throws CoinbaseException the coinbase exception
 	 */
     public Order placeOrder(OrderRequest request) throws CoinbaseException {
-    	return http.post("", new TypeReference<Order>() {}, request);
+    	return http.post("/orders", new TypeReference<Order>() {}, request);
     }
     
     /**
