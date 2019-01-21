@@ -44,3 +44,18 @@ The client required connection parameters to build the object
     * Real API points to: https://api-public.pro.coinbase.com
 
 
+### Example
+
+Get and list accounts example
+
+```java
+		String api ="https://api.pro.coinbase.com";
+		String publicKey= <your api key >;
+		String secretKey = < your secret >;
+		String passphrase= < your passphrase >;
+		Client client = new Client(publicKey,secretKey,passphrase,api);
+		List<Account> accounts = client.getAccounts(null);
+		for (Account account: accounts){
+			System.out.println(account.toString());
+		}
+```
