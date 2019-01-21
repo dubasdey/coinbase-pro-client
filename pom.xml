@@ -18,16 +18,68 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.erc</groupId>
-	<artifactId>org.erc.coinbase.pro</artifactId>
+	<groupId>com.github.dubasdey</groupId>
+	<artifactId>coinbase-pro-client</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<name>coinbase-pro-client</name>
 	<description>Coinbase PRO Client</description>
+	
+	<licenses>
+	    <license>
+	        <name>GNU LESSER GENERAL PUBLIC LICENSE v3</name>
+	        <url>https://opensource.org/licenses/lgpl-3.0.html</url>
+	        <distribution>repo</distribution>
+	    </license>
+	</licenses>
+	<scm>
+	    <url>https://github.com/dubasdey/coinbase-pro-client</url>
+	    <connection>scm:git:git://github.com/dubasdey/coinbase-pro-client.git</connection>
+	    <developerConnection>scm:git:git@github.com:dubasdey/coinbase-pro-client.git</developerConnection>
+	</scm>
+	<distributionManagement>
+	    <snapshotRepository>
+	        <id>ossrh</id>
+	        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
+
+	<developers>
+	    <developer>
+			<id>erodriguez</id>
+	        <name>Eduardo Rodríguez</name>
+			<email>eduardo@rodriguezcarro.es</email>
+	    </developer>
+	</developers>
 
 	<properties>
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<profiles>
+	    <profile>
+	        <id>sign</id>
+	        <build>
+	            <plugins>
+	                <plugin>
+	                    <groupId>org.apache.maven.plugins</groupId>
+	                    <artifactId>maven-gpg-plugin</artifactId>
+	                    <version>1.6</version>
+	                    <executions>
+	                        <execution>
+	                            <id>sign-artifacts</id>
+	                            <phase>verify</phase>
+	                            <goals>
+	                                <goal>sign</goal>
+	                            </goals>
+	                        </execution>
+	                    </executions>
+	                </plugin>
+	            </plugins>
+	        </build>
+	    </profile>
+	</profiles>
+
 
 	<dependencies>
 		<dependency>
@@ -96,6 +148,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+	        <plugin>
+	            <groupId>org.sonatype.plugins</groupId>
+	            <artifactId>nexus-staging-maven-plugin</artifactId>
+	            <version>1.6.6</version>
+	            <extensions>true</extensions>
+	            <configuration>
+	                <serverId>ossrh</serverId>
+	                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+	                <autoReleaseAfterClose>true</autoReleaseAfterClose>
+	            </configuration>
+	        </plugin>
+        			
 		</plugins>
 
 	</build>
