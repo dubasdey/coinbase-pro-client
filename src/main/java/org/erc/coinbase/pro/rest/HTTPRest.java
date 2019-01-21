@@ -151,6 +151,7 @@ final class HTTPRest {
 	 */
 	private void injectHeaders(HttpUriRequest request ) {
 		request.addHeader("accept","application/json");
+		request.addHeader("User-Agent", "gdax-java unofficial coinbase pro api library");
 	    request.addHeader("content-type", "application/json");
 	    request.addHeader("Accept-Language", "en");
 	}
