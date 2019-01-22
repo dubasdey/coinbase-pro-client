@@ -11,7 +11,23 @@ Java 7 Coinbase pro client. Using API spec: https://docs.pro.coinbase.com/
 * Custom exceptions
 * Logging APIU
 
+
 ## Dependencies
+
+### Maven project
+
+Include the dependency in the maven dependencies. All requirements will be downloaded by maven for you.
+
+```xml
+		<dependency>
+			<groupId>com.github.dubasdey</groupId>
+			<artifactId>coinbase-pro-client</artifactId>
+			<version>0.0.4</version>
+		</dependency>
+```
+I recommend to use the last version published in maven central.
+
+### Java project
 
 Dependencies are not included with jar. The client requires the following dependencies (or upper compatible version):
 
@@ -42,7 +58,6 @@ The client required connection parameters to build the object
 * _baseUrl_ : The URL to point the API (real URL or Sandbox)
     * Sandbox API points to: https://api-public.sandbox.pro.coinbase.com
     * Real API points to: https://api-public.pro.coinbase.com
-
 
 ### Example
 
