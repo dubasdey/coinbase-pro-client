@@ -101,10 +101,10 @@ public class Start {
 		config.setPassphrase(< your passphrase >);
 		
 		ProxyConfig proxyConfig = new ProxyConfig();
-		proxyConfig.setHost("172.31.219.30");
+		proxyConfig.setHost("127.0.0.1");
 		proxyConfig.setPort(8080);
-		proxyConfig.setUser("xIS15817");
-		proxyConfig.setPass("Password03");
+		proxyConfig.setUser("myuser");
+		proxyConfig.setPass("mypassword");
 		config.setProxy(proxyConfig);
 		
 		Client client = new RESTClient(config);
