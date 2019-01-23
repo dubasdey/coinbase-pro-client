@@ -80,7 +80,7 @@ final class HTTPRest {
 	private String passphrase;
 	
 	/** The httpclient. */
-	private  CloseableHttpClient httpclient;
+	private CloseableHttpClient httpclient;
 	
 	private Signature signature;
 	
@@ -118,7 +118,7 @@ final class HTTPRest {
 		    	log.debug("Using proxy");
 				CredentialsProvider credsProvider = new BasicCredentialsProvider();
 				if(proxyConfig.getUser() !=null) {
-					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), 8888),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));
+					credsProvider.setCredentials(new AuthScope(proxyConfig.getHost(), proxyConfig.getPort()),new UsernamePasswordCredentials(proxyConfig.getUser(), proxyConfig.getPass()));
 				}
 		    	HttpHost proxy = new HttpHost(proxyConfig.getHost(), proxyConfig.getPort(), "http");
 		    	builder.setDefaultCredentialsProvider(credsProvider).setProxy(proxy);

@@ -21,23 +21,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Instantiates a new proxy config.
+ * Instantiates a new client config.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public final class ProxyConfig {
+public final class ClientConfig {
 
-	/** The host. */
-	public String host;
+	/** The public key. */
+	private String publicKey;
 	
-	/** The port. */
-	public int port;
+	/** The secret key. */
+	private String secretKey;
 	
-	/** The user. */
-	public String user;
+	/** The passphrase. */
+	private String passphrase;
 	
-	/** The pass. */
-	public String pass;
+	/** The base url. */
+	private String baseUrl;
 	
+	/** The proxy. */
+	private ProxyConfig proxy;
 }

@@ -26,20 +26,21 @@ public class ClientTest {
 		if(stream!=null) {
 			properties.load(stream);
 			
-			String publickey = properties.getProperty("publickey");
-			String secret = properties.getProperty("secret");
-			String pass = properties.getProperty("pass");
-			String url = properties.getProperty("url");
-			client = new Client(publickey,secret,pass,url);
-			
+			ClientConfig config = new ClientConfig();
+			config.setPublicKey(properties.getProperty("publickey"));
+			config.setSecretKey(properties.getProperty("secret"));
+			config.setPassphrase(properties.getProperty("pass"));
+			config.setBaseUrl(properties.getProperty("url"));
+
 			String host = properties.getProperty("proxy.host");
 			if(host!=null) {
 				int port = Integer.parseInt(properties.getProperty("proxy.port","8080"));
 				String user = properties.getProperty("proxy.user");
 				String ppass = properties.getProperty("proxy.pass");
-				ProxyConfig config = new ProxyConfig(host, port,user,ppass);
-				client.setProxy(config);
+				ProxyConfig proxyConfig = new ProxyConfig(host, port,user,ppass);
+				config.setProxy(proxyConfig);
 			}
+			client = new Client(config);
 		}
 	}
 

@@ -39,40 +39,20 @@ public class Client {
     /**
 	 * Instantiates a new client.
 	 *
-	 * @param publicKey  the public key
-	 * @param secretKey  the secret key
-	 * @param passphrase the passphrase
-	 * @param baseUrl    the base url
+	 * @param ClientConfig  the client configuration
      * @throws SignatureException Signature Exception
 	 */
-    public Client(String publicKey,String secretKey, String passphrase, String baseUrl) throws SignatureException {
-		http = new HTTPRest(baseUrl,publicKey,secretKey,passphrase);
+    public Client(ClientConfig config) throws SignatureException {
+		http = new HTTPRest(config.getBaseUrl(),config.getPublicKey(),config.getSecretKey(),config.getPassphrase());
+		if(config.getProxy()!=null) {
+			http.setProxyConfig(config.getProxy());
+		}
     }
-	
-    /**
-	 * Sets the proxy (if required).
-	 *
-	 * @param proxy
-	 *            the new proxy
-	 */
-    public void setProxy(ProxyConfig proxy) {
-    	http.setProxyConfig(proxy);
-    }
-    
-    /**
-	 * Gets the current proxy configuration .
-	 *
-	 * @return the proxy (or null if not configured)
-	 */
-    public ProxyConfig getProxy() {
-    	return http.getProxyConfig();
-    }
-    
+
     /**
 	 * Inits the parameters.
 	 *
-	 * @param filter
-	 *            the filter
+	 * @param filter the pagination filter
 	 * @return the map
 	 */
     private Map<String,Object> initParameters(PaginationFilter filter){
