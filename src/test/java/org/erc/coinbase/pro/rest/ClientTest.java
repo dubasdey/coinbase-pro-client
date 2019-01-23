@@ -8,8 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.erc.coinbase.pro.rest.exceptions.*;
-import org.erc.coinbase.pro.rest.model.*;
+import org.erc.coinbase.pro.Client;
+import org.erc.coinbase.pro.exceptions.*;
+import org.erc.coinbase.pro.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class ClientTest {
 	public void init() throws IOException, SignatureException {
 		
 		Properties properties = new Properties();
-		InputStream stream = Client.class.getResourceAsStream("/test.properties");
+		InputStream stream = RESTClient.class.getResourceAsStream("/test.properties");
 		
 		if(stream!=null) {
 			properties.load(stream);
@@ -40,7 +41,7 @@ public class ClientTest {
 				ProxyConfig proxyConfig = new ProxyConfig(host, port,user,ppass);
 				config.setProxy(proxyConfig);
 			}
-			client = new Client(config);
+			client = new RESTClient(config);
 		}
 	}
 

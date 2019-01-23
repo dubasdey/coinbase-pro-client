@@ -9,7 +9,7 @@ Java 7 Coinbase pro client. Using API spec: https://docs.pro.coinbase.com/
 * Object oriented requests and responses
 * Proxy Support (Using Java configuration or HTTPClient configuration)
 * Custom exceptions
-* Logging APIU
+* Logging API
 
 
 ## Dependencies
@@ -43,14 +43,29 @@ Dependencies are not included with jar. The client requires the following depend
     * httpclient-4.5.6.jar 
     * httpcore-4.4.10.jar
 
+## Client
+
+The project provides a REST Client but the clients structure allows the posibility of other future clients
+(maybe Websocket?)
+
+All clients use the common interface __Client__ and the same model objets
+
 ## REST API Client
 
 Instance the **Client** class at **org.erc.coinbase.pro.rest.Client** to create a new API Client.
 
 ### Instance the client
-The client required connection parameters to build the object
+The client required connection parameters to build the object using a ClientConfig object
 
-    Client(String publicKey, String secretKey, String passphrase, String baseUrl)
+```java
+
+    ClientConfig config = new ClientConfig();
+	 config.setBaseUrl( baseUrl );
+		config.setPublicKey( publicKey );
+		config.setSecretKey( secretKey );
+		config.setPassphrase( passphrase );
+    
+```
 
 * _publicKey_ : The API Public Key
 * _secretKey_: The API Secret key
@@ -64,13 +79,54 @@ The client required connection parameters to build the object
 Get and list accounts example
 
 ```java
-		String api ="https://api.pro.coinbase.com";
-		String publicKey= <your api key >;
-		String secretKey = < your secret >;
-		String passphrase= < your passphrase >;
-		Client client = new Client(publicKey,secretKey,passphrase,api);
+
+import java.util.List;
+import org.erc.coinbase.pro.exceptions.CoinbaseException;
+import org.erc.coinbase.pro.model.Account;
+import org.erc.coinbase.pro.rest.RESTClient;
+import org.erc.coinbase.pro.Client;
+import org.erc.coinbase.pro.rest.ClientConfig;
+import org.erc.coinbase.pro.rest.ProxyConfig;
+
+public class Start {
+
+	public static void main(String[] args) throws CoinbaseException {
+		
+		ClientConfig config = new ClientConfig();
+		config.setBaseUrl("https://api.pro.coinbase.com");
+		config.setPublicKey(< your public key >);
+		config.setSecretKey(< your secret >);
+		config.setPassphrase(< your passphrase >);
+		
+		ProxyConfig proxyConfig = new ProxyConfig();
+		proxyConfig.setHost("172.31.219.30");
+		proxyConfig.setPort(8080);
+		proxyConfig.setUser("xIS15817");
+		proxyConfig.setPass("Password03");
+		config.setProxy(proxyConfig);
+		
+		Client client = new RESTClient(config);
 		List<Account> accounts = client.getAccounts(null);
 		for (Account account: accounts){
 			System.out.println(account.toString());
 		}
+	}
+}
+		
 ```
+
+## Client Usage
+
+## Working with exceptions
+
+The API converts some HTTP error codes in different exceptions that a developer can use.
+All the exceptions contains the original JSON data and have _CoinbaseException_ as parent
+
+* SignatureException: The signature is not correct when building
+* InvalidRequestException: The request is invalid. HTTP error 400 (See JSON for more information)
+* InvalidAPIKeyException: The request API is not valid when calling. HTTP error 401
+* ForbiddenException: The request is not allowed. HTTP error 403
+* NotFoundException: The endpoint not exists. HTTP error 404
+* TooManyRequestException: Too many request to the server. HTTP error 429
+* ServerException: Any other exception
+

@@ -34,6 +34,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -43,14 +44,14 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.erc.coinbase.pro.rest.exceptions.CoinbaseException;
-import org.erc.coinbase.pro.rest.exceptions.ForbiddenException;
-import org.erc.coinbase.pro.rest.exceptions.InvalidAPIKeyException;
-import org.erc.coinbase.pro.rest.exceptions.InvalidRequestException;
-import org.erc.coinbase.pro.rest.exceptions.NotFoundException;
-import org.erc.coinbase.pro.rest.exceptions.ServerException;
-import org.erc.coinbase.pro.rest.exceptions.SignatureException;
-import org.erc.coinbase.pro.rest.exceptions.TooManyRequestException;
+import org.erc.coinbase.pro.exceptions.CoinbaseException;
+import org.erc.coinbase.pro.exceptions.ForbiddenException;
+import org.erc.coinbase.pro.exceptions.InvalidAPIKeyException;
+import org.erc.coinbase.pro.exceptions.InvalidRequestException;
+import org.erc.coinbase.pro.exceptions.NotFoundException;
+import org.erc.coinbase.pro.exceptions.ServerException;
+import org.erc.coinbase.pro.exceptions.SignatureException;
+import org.erc.coinbase.pro.exceptions.TooManyRequestException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,7 +73,6 @@ final class HTTPRest {
 	/** The base url. */
 	private String baseUrl;
 	
-
 	/** The public key. */
 	private String publicKey;
 	
@@ -286,14 +286,22 @@ final class HTTPRest {
 		}
 	}    
 	
-	
+	/**
+	 * Delete a resource by path
+	 * 
+	 * @param resourcePath the resource path
+	 * @param type the type
+	 * @param params the params
+	 * @return The result of DELETE Execution
+	 * @throws CoinbaseException
+	 */
 	public <T> T delete(String resourcePath, TypeReference<T> type,Map<String,Object> params) throws CoinbaseException {
 		try {
 			log.debug(String.format("> Request %s",resourcePath));
 			init();
-			HttpGet request = new HttpGet(baseUrl + buildPath(resourcePath,params));
+			HttpDelete request = new HttpDelete(baseUrl + buildPath(resourcePath,params));
 			injectHeaders(request);
-			injectSecurity(request,resourcePath,"GET","");
+			injectSecurity(request,resourcePath,"DELETE","");
 			return execute(request,type);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
