@@ -20,7 +20,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.dubasdey</groupId>
 	<artifactId>coinbase-pro-client</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<name>coinbase-pro-client</name>
 	<description>Coinbase pro Client library</description>
 	<url>https://github.com/dubasdey/coinbase-pro-client</url>
