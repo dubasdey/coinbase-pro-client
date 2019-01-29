@@ -59,13 +59,8 @@ public class RESTClient implements Client {
     private Map<String,Object> initParameters(PaginationFilter filter){
     	Map<String,Object> params = new HashMap<>();
     	if(filter!=null) {
-			if(filter.getBefore()!=null) {
-				params.put("before", filter.getBefore());
-			}
-			if(filter.getAfter()!=null) {
-				params.put("after", filter.getAfter());
-			}
-			
+    		putIfAbsent(params, "before", filter.getBefore());
+    		putIfAbsent(params, "after", filter.getAfter());
 	 		if(filter.getLimit()>0) {
 				params.put("limit", filter.getLimit());
 			}
@@ -86,10 +81,8 @@ public class RESTClient implements Client {
 	 * @see org.erc.coinbase.pro.rest.Client#getAccount(java.lang.String)
 	 */
     @Override
-	public Account getAccount(String id) throws CoinbaseException {
-    	if( id == null || id.isEmpty()) {
-    		throw new RequiredParameterException("accountId");
-    	}        	
+	public Account getAccount(String id) throws CoinbaseException {  
+    	assertRequired("accountId",id);
     	return http.get(String.format("/account/%s",id), new TypeReference<Account>() {},null, true);	
     }
     
@@ -99,9 +92,8 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public List<AccountHistory> getAccountHistory(AccountHistoryFilter filter) throws CoinbaseException {
-    	if( filter == null || filter.getAccountId() == null || filter.getAccountId().isEmpty()) {
-    		throw new RequiredParameterException("accountId");
-    	}
+    	assertRequired("filter",filter);
+    	assertRequired("accountId",filter.getAccountId());
     	Map<String,Object> params = initParameters(filter);
     	return http.get(String.format("/account/%s/ledger",filter.getAccountId()), new TypeReference<List<AccountHistory>>() {},params, true);
     }
@@ -110,10 +102,9 @@ public class RESTClient implements Client {
 	 * @see org.erc.coinbase.pro.rest.Client#getAccountHolds(org.erc.coinbase.pro.model.AccountHoldFilter)
 	 */
     @Override
-	public List<Hold> getAccountHolds(AccountHoldFilter filter) throws CoinbaseException {
-    	if( filter == null || filter.getAccountId() == null || filter.getAccountId().isEmpty()) {
-    		throw new RequiredParameterException("accountId");
-    	}      	
+	public List<Hold> getAccountHolds(AccountHoldFilter filter) throws CoinbaseException {  
+    	assertRequired("filter",filter);
+    	assertRequired("accountId",filter.getAccountId());
     	Map<String,Object> params = initParameters(filter);
     	return http.get(String.format("/account/%s/holds",filter.getAccountId()), new TypeReference<List<Hold>>() {},params, true);
     }
@@ -130,10 +121,8 @@ public class RESTClient implements Client {
 	 * @see org.erc.coinbase.pro.rest.Client#cancelOrder(java.lang.String)
 	 */
     @Override
-	public void cancelOrder(String id) throws CoinbaseException {
-    	if( id == null || id.isEmpty()) {
-    		throw new RequiredParameterException("orderId");
-    	}     	
+	public void cancelOrder(String id) throws CoinbaseException {	
+    	assertRequired("orderId",id);
     	http.delete(String.format("/orders/%s", id),null,null);
     } 
     
@@ -143,7 +132,7 @@ public class RESTClient implements Client {
     @Override
 	public List<String> cancelAllOrders(String productId) throws CoinbaseException {
     	Map<String,Object> filter = new HashMap<>();
-		putIfAbsent(filter, "product_id", productId);
+    	putIfAbsent(filter, "product_id", productId);
     	return http.delete("/orders",new TypeReference<List<String>>() {},filter);
     	
     } 
@@ -165,10 +154,8 @@ public class RESTClient implements Client {
 	 * @see org.erc.coinbase.pro.rest.Client#getOrder(java.lang.String)
 	 */    
     @Override
-	public Order getOrder(String id) throws CoinbaseException {
-    	if(id == null || id.isEmpty()) {
-    		throw new RequiredParameterException("order-id");
-    	}    	
+	public Order getOrder(String id) throws CoinbaseException {	
+    	assertRequired("order-id",id);
     	return http.get(String.format("/orders/%s",id), new TypeReference<Order>() {},null, true);
     }
     
@@ -177,7 +164,8 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public List<Fill> getFills(FillFilter fillFilter) throws CoinbaseException {
-    	if(fillFilter == null || (fillFilter.getOrderId() == null && fillFilter.getProductId() == null)) {
+    	assertRequired("filter",fillFilter);
+    	if(fillFilter.getOrderId() == null && fillFilter.getProductId() == null) {
     		throw new RequiredParameterException("order_id or product_id");
     	}    	
     	Map<String,Object> filter = initParameters(fillFilter);
@@ -191,6 +179,7 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public Deposit deposit(DepositRequest deposit) throws CoinbaseException {
+    	assertRequired("deposit",deposit);
     	if( deposit instanceof  DepositCoinbaseRequest) {
     		return http.post("/deposits/coinbase-account", new TypeReference<Deposit>() {}, deposit);
     	} else if (deposit instanceof DepositPaymentMethodRequest) {
@@ -205,6 +194,7 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public Withdrawal withdrawal(WithdrawalRequest withdrawal) throws CoinbaseException {
+    	assertRequired("request",withdrawal);
     	if (withdrawal instanceof WithdrawalRequestCoinbase) {
     		return http.post("/withdrawals/coinbase-account", new TypeReference<Withdrawal>() {}, withdrawal);
     	} else if (withdrawal instanceof WithdrawalRequestPaymentMethod) {
@@ -244,10 +234,8 @@ public class RESTClient implements Client {
 	 * @see org.erc.coinbase.pro.rest.Client#getReportStatus(java.lang.String)
 	 */
     @Override
-	public Report getReportStatus(String id) throws CoinbaseException {
-    	if(id == null || id.isEmpty()) {
-    		throw new RequiredParameterException("report_id");
-    	}    	
+	public Report getReportStatus(String id) throws CoinbaseException {  	
+    	assertRequired("report_id",id);
     	return http.get(String.format("/reports/%s",id), new TypeReference<Report>() {},null, true);
     }
     
@@ -281,9 +269,7 @@ public class RESTClient implements Client {
     	if(level<1 || level > 3) {
     		level = 1;
     	}
-    	if(productId == null || productId.isEmpty()) {
-    		throw new RequiredParameterException("productId");
-    	}
+    	assertRequired("productId",productId);
     	return http.get(String.format("/products/%s/book?level=%s",productId,level), new TypeReference<Book>() {},null, false);
     }
     
@@ -292,9 +278,7 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public Ticker getProductTicker(String productId) throws CoinbaseException {
-    	if(productId == null || productId.isEmpty()) {
-    		throw new RequiredParameterException("productId");
-    	}
+    	assertRequired("productId",productId);
     	return http.get(String.format("/products/%s/ticker",productId), new TypeReference<Ticker>() {},null, false);
     }
     
@@ -303,9 +287,8 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public List<Trade> getProductTrades(ProductTradesFilter productFilter) throws CoinbaseException{
-    	if(productFilter == null || productFilter.getProductId() == null || productFilter.getProductId().isEmpty()) {
-    		throw new RequiredParameterException("productId");
-    	}    	
+    	assertRequired("filter",productFilter);
+    	assertRequired("productId",productFilter.getProductId());
     	Map<String,Object> params = initParameters(productFilter);
     	return http.get(String.format("/products/%s/trades",productFilter.getProductId()), new TypeReference<List<Trade>>() {},params, false);
     } 
@@ -315,13 +298,11 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public List<String[]> getProductHistoricRate(ProductCandleFilter request) throws CoinbaseException{
-    	if(request == null || request.getProductId() == null || request.getProductId().isEmpty()) {
-    		throw new RequiredParameterException("productId");
-    	} 
+    	assertRequired("filter",request);
+    	assertRequired("productId",request.getProductId());
     	Map<String,Object> filter = new HashMap<>();
 		putIfAbsent(filter, "start", request.getStart());
 		putIfAbsent(filter, "end", request.getEnd());
-		
 		if(request.getGranularity()!=null) {
 			putIfAbsent(filter, "granularity", request.getGranularity().getSeconds());
 		}
@@ -333,9 +314,7 @@ public class RESTClient implements Client {
 	 */
     @Override
 	public Stats getProductStats(String productId) throws CoinbaseException{
-    	if( productId == null || productId.isEmpty()) {
-    		throw new RequiredParameterException("productId");
-    	} 
+    	assertRequired("productId",productId);
     	return http.get(String.format("/products/%s/stats",productId), new TypeReference<Stats>() {},null, false);
     }
     
@@ -359,20 +338,27 @@ public class RESTClient implements Client {
     /**
 	 * Put in map if not exists.
 	 *
-	 * @param <K>
-	 *            the key type
-	 * @param <V>
-	 *            the value type
-	 * @param map
-	 *            Map
-	 * @param k
-	 *            Key
-	 * @param v
-	 *            Value
+	 * @param <K>	the key type
+	 * @param <V>	the value type
+	 * @param map	Map
+	 * @param k	Key
+	 * @param v	Value
 	 */
     private <K,V> void putIfAbsent(Map<K,V> map,K k,V v) {
-    	if(map !=null && k!=null) {
+    	if(map !=null && k!=null && v!=null) {
     		map.putIfAbsent(k, v);
     	}
+    }
+    
+    /**
+     * Required assert
+     * @param name key name
+     * @param value	 key value
+     * @throws RequiredParameterException
+     */
+    private <T> void assertRequired(String name, T value) throws RequiredParameterException {
+    	if(value == null || (value instanceof String && ((String) value).isEmpty())  ) {
+    		throw new RequiredParameterException(name);
+    	}  
     }
 }
