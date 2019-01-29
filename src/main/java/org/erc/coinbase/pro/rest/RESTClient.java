@@ -370,6 +370,10 @@ public class RESTClient implements Client {
 	 */
 	@Override
 	public Conversion conversion(ConversionRequest request) throws CoinbaseException {
+		assertRequired("request",request);
+		assertRequired("to",request.getTo());
+		assertRequired("from",request.getFrom());
+		assertRequired("amount",request.getAmount());
 		return http.post("/conversions", new TypeReference<Conversion>() {}, request);
 	}
 }
