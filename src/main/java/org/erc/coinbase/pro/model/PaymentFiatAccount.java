@@ -16,11 +16,16 @@
  */
 package org.erc.coinbase.pro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 
 /**
  * The Class PaymentFiatAccount.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class PaymentFiatAccount {
 

@@ -18,6 +18,8 @@ package org.erc.coinbase.pro.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -26,6 +28,8 @@ import lombok.Data;
  * The Class Product.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
 	
 	/** The id. */
@@ -87,4 +91,7 @@ public class Product {
 	@JsonProperty("cancel_only")
 	private boolean cancelOnly;		
 
+	@JsonProperty("accessible")
+	private boolean accessible;
+	
 }

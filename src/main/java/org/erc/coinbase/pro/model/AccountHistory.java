@@ -19,6 +19,8 @@ package org.erc.coinbase.pro.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -26,6 +28,8 @@ import lombok.Data;
 /**
  * Instantiates a new account history.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class AccountHistory {
 
