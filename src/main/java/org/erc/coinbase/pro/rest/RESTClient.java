@@ -29,6 +29,7 @@ import org.erc.coinbase.pro.model.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+
 /**
  * The Class Client.
  */
@@ -351,14 +352,24 @@ public class RESTClient implements Client {
     }
     
     /**
-     * Required assert
+     * Required assert.
+     *
+     * @param <T> the generic type
      * @param name key name
-     * @param value	 key value
-     * @throws RequiredParameterException
+     * @param value  key value
+     * @throws RequiredParameterException the required parameter exception
      */
     private <T> void assertRequired(String name, T value) throws RequiredParameterException {
     	if(value == null || (value instanceof String && ((String) value).isEmpty())  ) {
     		throw new RequiredParameterException(name);
     	}  
     }
+
+	/* (non-Javadoc)
+	 * @see org.erc.coinbase.pro.Client#conversion(org.erc.coinbase.pro.model.ConversionRequest)
+	 */
+	@Override
+	public Conversion conversion(ConversionRequest request) throws CoinbaseException {
+		return http.post("/conversions", new TypeReference<Conversion>() {}, request);
+	}
 }

@@ -27,6 +27,8 @@ import org.erc.coinbase.pro.model.AccountHistoryFilter;
 import org.erc.coinbase.pro.model.AccountHoldFilter;
 import org.erc.coinbase.pro.model.Book;
 import org.erc.coinbase.pro.model.CoinbaseAccount;
+import org.erc.coinbase.pro.model.Conversion;
+import org.erc.coinbase.pro.model.ConversionRequest;
 import org.erc.coinbase.pro.model.Currency;
 import org.erc.coinbase.pro.model.Deposit;
 import org.erc.coinbase.pro.model.DepositRequest;
@@ -891,4 +893,23 @@ public interface Client {
 	 */
 	Date getTime() throws CoinbaseException;
 
+	/** 
+	 * Creates a conversion
+	 * HTTP Request
+	 * 		POST /conversions
+	 * 
+	 * 	API Key Permissions
+	 * 		This endpoint requires the “trade” permission.
+	 * 
+	 * 	Parameters
+	 * 	Param 		Description
+	 * 	from 		A valid currency id
+	 * 	to 			A valid currency id
+	 * 	amount 		Amount of from to convert to to
+	 * 
+	 * Response
+	 * 	A successful conversion will be assigned a conversion id. 
+	 * 	The corresponding ledger entries for a conversion will reference this conversion id.
+	*/
+	Conversion conversion(ConversionRequest request) throws CoinbaseException;
 }
