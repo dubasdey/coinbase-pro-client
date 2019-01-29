@@ -3,9 +3,7 @@
 Java 7 Coinbase pro client. Using API spec: https://docs.pro.coinbase.com/
 
 [![Build Status](https://travis-ci.org/dubasdey/coinbase-pro-client.svg?branch=master)](https://travis-ci.org/dubasdey/coinbase-pro-client)
-
 [![](https://img.shields.io/maven-central/v/org.apache.maven/apache-maven.svg?style=popout)](https://search.maven.org/search?q=a:coinbase-pro-client)
-
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
 ## Features
@@ -103,10 +101,10 @@ public class Start {
 		config.setPassphrase(< your passphrase >);
 		
 		ProxyConfig proxyConfig = new ProxyConfig();
-		proxyConfig.setHost("172.31.219.30");
+		proxyConfig.setHost("127.0.0.1");
 		proxyConfig.setPort(8080);
-		proxyConfig.setUser("xIS15817");
-		proxyConfig.setPass("Password03");
+		proxyConfig.setUser("myuser");
+		proxyConfig.setPass("mypassword");
 		config.setProxy(proxyConfig);
 		
 		Client client = new RESTClient(config);
