@@ -40,7 +40,7 @@ public class RESTClient implements Client {
     /**
 	 * Instantiates a new client.
 	 *
-	 * @param ClientConfig  the client configuration
+	 * @param config  the client configuration
      * @throws SignatureException Signature Exception
 	 */
     public RESTClient(ClientConfig config) throws SignatureException {
