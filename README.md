@@ -132,3 +132,8 @@ All the exceptions contains the original JSON data and have _CoinbaseException_ 
 * TooManyRequestException: Too many request to the server. HTTP error 429
 * ServerException: Any other exception
 
+
+# Donate
+
+Buy me a coffe to help me continue supporting this project. 
+<a href="https://www.paypal.com/donate/?hosted_button_id=K6DQ5GLE8KHGY">Buy me a coffe</a>
